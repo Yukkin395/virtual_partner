@@ -1,3 +1,23 @@
+@import url('https://fonts.googleapis.com/css2?family=Kiwi+Maru&family=Zen+Kaku+Gothic+New:wght@300;400;500;700;900&family=Zen+Maru+Gothic:wght@300;400;500;700;900&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+  body {
+    @apply font-kiwi;
+  }
+}
+
+@layer utilities {
+  .text-heading {
+    @apply text-2xl font-bold;
+  }
+  .text-subheading {
+    @apply text-lg font-semibold;
+  }
+  .text-body {
+    @apply text-base font-normal;
+  }
+}
