@@ -1,11 +1,11 @@
 blank_issues_enabled: false
 contact_links:
   - name: バグ報告
-    url: https://github.com/Yukkin395/issues/new?template=bug_report.md
+    url: https://github.com/Yukkin395/virtual_partner/issues/new?template=bug_report.md
     about: バグを報告するためのテンプレート
   - name: 機能リクエスト
-    url: https://github.com/Yukkin395/issues/new?template=feature_request.md
+    url: https://github.com/Yukkin395/virtual_partner/issues/new?template=feature_request.md
     about: 新しい機能をリクエストするためのテンプレート
   - name: リファクタリングリクエスト
-    url: https://github.com/Yukkin395/issues/new?template=refactor-request.md
+    url: https://github.com/Yukkin395/virtual_partner/issues/new?template=refactor-request.md
     about: リファクタリングをリクエストするためのテンプレート
