@@ -1,6 +1,10 @@
+import { TextField } from "../components/TextField"
+
 const Home = () => {
   return (
-    <div>Home</div>
+    <div>
+      <TextField label="メールアドレス" placeholder="sample@sample.com" />
+    </div>
   )
 }
 
