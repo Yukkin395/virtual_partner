@@ -1,9 +1,13 @@
 from fastapi import FastAPI, File, UploadFile, HTTPException
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, StreamingResponse
 import whisper
 import asyncio
 import os
 import uuid
+import openai
+from pydantic import BaseModel
+import io
+from gtts import gTTS
 
 app = FastAPI()
 
