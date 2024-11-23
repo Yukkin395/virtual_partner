@@ -12,6 +12,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     ffmpeg \
     && rm -rf /var/lib/apt/lists/*
 
+# pipのアップグレード（オプション）
+RUN pip install --upgrade pip
+
 # 作業ディレクトリの設定
 WORKDIR /app
 
