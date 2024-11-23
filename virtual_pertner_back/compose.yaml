@@ -9,6 +9,8 @@ services:
     command: python -m uvicorn main:app --host 0.0.0.0 --port 8000
     restart: unless-stopped
     tty: true
+    env_file:
+      - .env  # .envファイルを読み込む
 
 volumes:
   faster_whisper:
