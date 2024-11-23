@@ -1,4 +1,5 @@
-import Live2DModelComponent from "../features/Live2D/Live2DModel"
+import Live2DModelComponent from "../features/Live2D/components/Live2DModelComponent"
+
 
 const Home = () => {
   return (
