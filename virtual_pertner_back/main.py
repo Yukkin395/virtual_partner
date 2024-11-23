@@ -13,7 +13,7 @@ from fastapi.middleware.cors import CORSMiddleware
 app = FastAPI()
 
 origins = [
-    "http://localhost:8080",
+    "http://localhost:5173",
     # todo ここに本番環境のオリジンを入れる
 ]
 
