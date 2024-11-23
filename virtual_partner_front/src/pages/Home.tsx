@@ -1,9 +1,9 @@
-import { TextField } from "../components/TextField"
+import Live2DModelComponent from "../features/Live2D/Live2DModel"
 
 const Home = () => {
   return (
     <div>
-      <TextField label="メールアドレス" placeholder="sample@sample.com" />
+      <Live2DModelComponent />
     </div>
   )
 }
