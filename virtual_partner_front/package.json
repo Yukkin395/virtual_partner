@@ -12,7 +12,11 @@
     "build-storybook": "storybook build"
   },
   "dependencies": {
+    "install": "^0.13.0",
     "jotai": "^2.10.2",
+    "npm": "^10.9.1",
+    "pixi.js": "^7.2.4",
+    "pixi-live2d-display-lipsyncpatch": "^0.5.0-ls-7",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-router-dom": "^6.28.0"
