@@ -1,5 +1,5 @@
-# ベースイメージの指定（Python 3.10を使用）
-FROM python:3.10-slim
+# ベースイメージの指定
+FROM python:3.10-slim-bullseye
 
 # 環境変数の設定
 ENV LANG C.UTF-8
