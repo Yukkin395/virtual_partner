@@ -1,3 +1,4 @@
+import time
 from fastapi import FastAPI, File, UploadFile, HTTPException
 from fastapi.responses import JSONResponse
 import whisper
@@ -60,15 +61,18 @@ def get_llm_response(user_text: str) -> str:
     response = openai.ChatCompletion.create(
         model="gpt-3.5-turbo",
         messages=[
-            {"role": "system", "content": "あなたは私の可愛い彼女です"},
+            {"role": "system", "content": "あなたは私の可愛い彼女です。敬語ではなくて砕けた言葉で話してね。"},
             {"role": "user", "content": user_text},
         ]
     )
     llm_response = response.choices[0].message['content']
     return llm_response
 
+
 @app.post("/chat/")
 async def chat(file: UploadFile = File(...)):
+    start_time = time.perf_counter() #----------------デバッグ用 処理開始時刻を記録------------------#
+
     if not file.content_type.startswith("audio/"):
         raise HTTPException(status_code=400, detail="Invalid file type")
 
@@ -80,8 +84,12 @@ async def chat(file: UploadFile = File(...)):
         loop = asyncio.get_event_loop()
         llm_response = await loop.run_in_executor(None, get_llm_response, transcribed_text)
 
+        end_time = time.perf_counter()  #----------------デバッグ用 処理終了時刻を記録------------------#
+        processing_time = end_time - start_time #----------------デバッグ用 処理時間を計算------------------#
+
+
         # クライアントに音声認識の結果とLLMの応答を返す
-        return JSONResponse(content={"text": transcribed_text, "response": llm_response})
+        return JSONResponse(content={"text": transcribed_text, "response": llm_response, "time": processing_time})
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
