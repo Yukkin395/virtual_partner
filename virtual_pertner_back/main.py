@@ -55,6 +55,11 @@ async def transcribe_audio(file: UploadFile) -> str:
 # gptモデルとにテキスト送信 & 返信受信
 async def get_llm_response(user_text: str) -> str:
 
+    # OpenAIのAPIキーを設定（環境変数から取得）
+    openai.api_key = os.getenv("OPENAI_API_KEY")
+    if not openai.api_key:
+        raise ValueError("OPENAI_API_KEY is not set")
+
     # OpenAI APIを使って応答を取得
     response = await openai.ChatCompletion.acreate(
         model="gpt-3.5-turbo",  # または "gpt-4" を使用
