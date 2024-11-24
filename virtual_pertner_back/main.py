@@ -72,8 +72,8 @@ async def get_llm_response(user_text: str) -> str:
     return llm_response
 
 
-@app.post("/transcribe/")
-async def transcribe(file: UploadFile = File(...)):
+@app.post("/chat/")
+async def chat(file: UploadFile = File(...)):
     if not file.content_type.startswith("audio/"):
         raise HTTPException(status_code=400, detail="Invalid file type")
     
