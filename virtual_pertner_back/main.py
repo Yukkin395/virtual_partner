@@ -28,6 +28,8 @@ app.add_middleware(
 # Whisperモデルのロード（アプリ起動時に一度だけロード、再利用できる）
 model = whisper.load_model("base")  # "tiny", "base", "small", "medium", "large" の中から選択
 
+
+# Whisperを使った音声のテキスト変換
 async def transcribe_audio(file: UploadFile) -> str:
     # ユニークなファイル名を生成
     filename = f"temp_audio_{uuid.uuid4().hex}"
@@ -48,6 +50,21 @@ async def transcribe_audio(file: UploadFile) -> str:
         os.remove(file_path)
     
     return transcribed_text
+
+
+# gptモデルとにテキスト送信 & 返信受信
+async def get_llm_response(user_text: str) -> str:
+
+    # OpenAI APIを使って応答を取得
+    response = await openai.ChatCompletion.acreate(
+        model="gpt-3.5-turbo",  # または "gpt-4" を使用
+        messages=[
+            {"role": "system", "content": "あなたは私の可愛い彼女です"},
+            {"role": "user", "content": user_text},
+        ]
+    )
+    llm_response = response.choices[0].message['content']
+    return llm_response
 
 
 @app.post("/transcribe/")
