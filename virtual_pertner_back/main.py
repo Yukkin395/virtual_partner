@@ -80,7 +80,13 @@ async def chat(file: UploadFile = File(...)):
     try:
         # 音声をテキストに変換する関数を呼び出す
         transcribed_text = await transcribe_audio(file)
-        return JSONResponse(content={"text": transcribed_text})
-    
+
+        # LLMにテキストを送り、応答を取得する関数を呼び出す
+        llm_response = await get_llm_response(transcribed_text)
+
+        # クライアントに音声認識の結果とLLMの応答を返す
+        return JSONResponse(content={"text": transcribed_text, "response": llm_response})
+
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
