@@ -27,6 +27,7 @@ app.add_middleware(
 # Whisperモデルのロード（アプリ起動時に一度だけロード）
 model = whisper.load_model("base")  # "tiny", "base", "small", "medium", "large" の中から選択
 
+
 # Whisperを使った音声のテキスト変換
 async def transcribe_audio(file: UploadFile) -> str:
     # ユニークなファイル名を生成
@@ -50,6 +51,19 @@ async def transcribe_audio(file: UploadFile) -> str:
     return transcribed_text
 
 
+initial_prompt = """
+命令：
+・あなたは私の彼女です。
+
+以下の条件をもとに、会話をしてください
+
+条件：
+・会話をしているような口調
+・私たちは仲良しです
+・出力に記号は使わない
+"""
+
+
 # gptモデルにテキスト送信 & 返信受信
 def get_llm_response(user_text: str) -> str:
     # OpenAIのAPIキーを設定（環境変数から取得）
@@ -61,7 +75,7 @@ def get_llm_response(user_text: str) -> str:
     response = openai.ChatCompletion.create(
         model="gpt-3.5-turbo",
         messages=[
-            {"role": "system", "content": "あなたは私の可愛い彼女です。敬語ではなくて砕けた言葉で話してね。"},
+            {"role": "system", "content": initial_prompt},
             {"role": "user", "content": user_text},
         ]
     )
