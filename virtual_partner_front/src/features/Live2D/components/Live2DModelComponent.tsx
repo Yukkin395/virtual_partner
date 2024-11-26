@@ -7,7 +7,8 @@ const Live2DModelComponent: React.FC<{ audioUrl: string }> = ({ audioUrl }) => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const isMountedRef = useRef(true);
   const { app, initialized } = usePIXIApp(canvasRef); // 初期化状態を取得
-  const { analyzer, playAudio, pauseAudio, isPlaying } = useAudioAnalyzer(audioUrl);
+  const { analyzer, playAudio, pauseAudio, isPlaying } =
+    useAudioAnalyzer(audioUrl);
 
   // マウント状態の管理
   useEffect(() => {
@@ -18,7 +19,12 @@ const Live2DModelComponent: React.FC<{ audioUrl: string }> = ({ audioUrl }) => {
   }, []);
 
   // PIXIアプリケーションが初期化された後にモデルをロード
-  useLive2DModel(initialized ? app : null, isMountedRef.current, analyzer, isPlaying);
+  useLive2DModel(
+    initialized ? app : null,
+    isMountedRef.current,
+    analyzer,
+    isPlaying
+  );
 
   return (
     <>
@@ -34,7 +40,7 @@ const Live2DModelComponent: React.FC<{ audioUrl: string }> = ({ audioUrl }) => {
           pointerEvents: "none",
         }}
       />
-      <div style={{ position: 'fixed', bottom: 20, left: 20, zIndex: 2 }}>
+      <div style={{ position: "fixed", bottom: 20, left: 20, zIndex: 2 }}>
         <button onClick={playAudio}>再生</button>
         <button onClick={pauseAudio}>停止</button>
       </div>
