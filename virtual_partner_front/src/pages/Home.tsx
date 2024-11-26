@@ -4,7 +4,7 @@ import Live2DModelComponent from "../features/Live2D/components/Live2DModelCompo
 const Home = () => {
   return (
     <div>
-      <Live2DModelComponent />
+      <Live2DModelComponent audioUrl="/hello.wav" />
     </div>
   )
 }
