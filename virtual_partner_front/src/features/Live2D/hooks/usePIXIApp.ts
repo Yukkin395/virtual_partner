@@ -18,6 +18,7 @@ export const usePIXIApp = (canvasRef: React.RefObject<HTMLCanvasElement>) => {
       });
 
       appRef.current = app;
+      app.start();
       setInitialized(true);
 
       console.log("PIXIアプリケーションが正常に初期化されました");
