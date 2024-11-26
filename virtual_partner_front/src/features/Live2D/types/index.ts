@@ -1,5 +1,3 @@
-
-
 export interface PIXIConfig {
   width: number;
   height: number;
