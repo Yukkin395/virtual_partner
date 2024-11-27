@@ -1,4 +1,4 @@
-import { useNicoNico } from "./useNiconico";
+import { useNicoNico } from "./useNicoNico";
 
 type NicoNicoViewProps = {
   Comments: string[];
