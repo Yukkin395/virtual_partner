@@ -28,7 +28,7 @@ const Live2DModelComponent: React.FC<{ audioUrl: string }> = ({ audioUrl }) => {
   return (
     <canvas
       ref={canvasRef}
-      className="absolute top-0 left-0 w-full h-full bg-cover bg-center bg-custom-image pointer-events-none"
+      className="absolute top-0 left-0 w-full h-full bg-cover bg-center bg-custom-image"
     />
   );
 };
