@@ -20,7 +20,7 @@ export const useLive2DModel = (
     if (modelRef.current) {
       modelRef.current.position.set(
         window.innerWidth / 2,
-        window.innerHeight / 2
+        window.innerHeight / 2 + 150
       );
     }
   }, []);
@@ -44,10 +44,10 @@ export const useLive2DModel = (
         const scale = Math.min(
           window.innerWidth / model.width,
           window.innerHeight / model.height
-        );
+        ) * 1.5;
         model.scale.set(scale);
         model.anchor.set(0.5);
-        model.position.set(window.innerWidth / 2, window.innerHeight / 2);
+        model.position.set(window.innerWidth / 2, window.innerHeight / 2 + 150);
 
         app.stage.addChild(model as any);
       } catch (error) {
