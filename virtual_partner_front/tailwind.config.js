@@ -33,6 +33,10 @@ export default {
           '0%': { opacity: 0 },
           '100%': { opacity: 1 },
         },
+        'spin': {
+          '0%': { transform: 'rotate(0deg)' },
+          '100%': { transform: 'rotate(360deg)' },
+        },
       },
       animation: {
         'niconico-scroll': 'niconico-scroll 5s linear forwards',
@@ -40,6 +44,7 @@ export default {
         'rotate-90': 'rotate-90 0.4s ease forwards',
         'scale-1': 'scale-1 0.75s ease forwards',
         'opacity-1': 'opacity-1 0.4s ease 0.4s forwards',
+        'spin': 'spin 1s linear infinite',
       },
     },
   },
