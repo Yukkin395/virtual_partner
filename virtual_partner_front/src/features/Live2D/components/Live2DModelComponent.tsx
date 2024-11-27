@@ -3,11 +3,19 @@ import { usePIXIApp } from "../hooks/usePIXIApp";
 import { useLive2DModel } from "../hooks/useLive2DModel";
 import { useAudioAnalyzer } from "../../../hooks/useAudioAnalyzer";
 
-const Live2DModelComponent: React.FC<{ audioUrl: string }> = ({ audioUrl }) => {
+interface Live2DModelComponentProps {
+  modelPath: string;
+  audioUrl?: string;
+}
+
+const Live2DModelComponent: React.FC<Live2DModelComponentProps> = ({
+  modelPath,
+  audioUrl,
+}) => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const isMountedRef = useRef(true);
   const { app, initialized } = usePIXIApp(canvasRef); // 初期化状態を取得
-  const { analyzer, isPlaying } = useAudioAnalyzer(audioUrl);
+  const { analyzer, isPlaying } = useAudioAnalyzer(audioUrl || "");
 
   // マウント状態の管理
   useEffect(() => {
@@ -22,7 +30,8 @@ const Live2DModelComponent: React.FC<{ audioUrl: string }> = ({ audioUrl }) => {
     initialized ? app : null,
     isMountedRef.current,
     analyzer,
-    isPlaying
+    isPlaying,
+    modelPath
   );
 
   return (

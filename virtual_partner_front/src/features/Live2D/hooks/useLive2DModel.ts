@@ -11,7 +11,8 @@ export const useLive2DModel = (
   app: Application | null,
   isMounted: boolean,
   analyzer: AnalyserNode | null,
-  isPlaying: boolean
+  isPlaying: boolean,
+  modelPath: string
 ) => {
   const modelRef = useRef<Live2DModel | null>(null);
   const animationFrameRef = useRef<number | null>(null);
@@ -33,18 +34,16 @@ export const useLive2DModel = (
 
     const loadModel = async () => {
       try {
-        const model = await Live2DModel.from(
-          "/Resources/Hiyori/Hiyori.model3.json",
-          {
-            autoUpdate: true,
-          }
-        );
+        const model = await Live2DModel.from(modelPath, {
+          autoUpdate: true,
+        });
         modelRef.current = model;
 
-        const scale = Math.min(
-          window.innerWidth / model.width,
-          window.innerHeight / model.height
-        ) * 1.5;
+        const scale =
+          Math.min(
+            window.innerWidth / model.width,
+            window.innerHeight / model.height
+          ) * 1.5;
         model.scale.set(scale);
         model.anchor.set(0.5);
         model.position.set(window.innerWidth / 2, window.innerHeight / 2 + 150);
@@ -56,7 +55,7 @@ export const useLive2DModel = (
     };
 
     loadModel();
-  }, [app, isMounted]);
+  }, [app, isMounted, modelPath]);
 
   // リップシンクの更新
   useEffect(() => {

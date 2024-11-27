@@ -11,7 +11,7 @@ export const Home = () => {
       {/* <div className="absolute top-0 right-20 m-4 z-50">
         <NuvMenuView />
       </div> */}
-      <Live2DModelComponent audioUrl="/hello.wav" />
+      <Live2DModelComponent modelPath="/Resources/Hiyori/Hiyori.model3.json" />
       {/* <div className="absolute top-0 left-0 m-4">
         <TalkBoxView />
       </div> */}
