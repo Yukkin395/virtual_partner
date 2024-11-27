@@ -1,10 +1,7 @@
 import { TextField } from "../components/TextField"
 import Live2DModelComponent from "../features/Live2D/components/Live2DModelComponent"
 import { mockComments } from "../features/NicoNico/const"
-import { NicoNicoView } from "../features/NicoNico/NiconicoView"
-
-import { Footer } from "../features/Nuvigation/Footer"
-
+import { NicoNicoView } from "../features/NicoNico/NicoNicoView"
 // import { NuvMenuView } from "../features/Nuvigation/NuvMenu/NuvMenuView"
 // import { TalkBoxView } from "../features/TalkBox/TalkBoxView"
 
@@ -20,9 +17,6 @@ export const Home = () => {
       </div> */}
       <div className="absolute bottom-20 left-1/2 transform -translate-x-1/2 mb-8 w-full max-w-md z-40">
         <TextField placeholder="テキストを入力してください" />
-      </div>
-      <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 mb-8 w-full max-w-md z-40">
-        <Footer />
       </div>
       <div className="absolute inset-0">
         <NicoNicoView Comments={mockComments} />
