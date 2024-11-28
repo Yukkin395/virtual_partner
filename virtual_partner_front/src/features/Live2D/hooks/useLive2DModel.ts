@@ -1,8 +1,7 @@
-
-
-import { useEffect, useRef } from 'react';
-import { Live2DModel } from 'pixi-live2d-display-lipsyncpatch';
-import { Application } from 'pixi.js';
+import { useEffect, useRef, useCallback } from "react";
+import { Live2DModel } from "pixi-live2d-display-lipsyncpatch";
+import { Application } from "pixi.js";
+import { useResize } from "../../../hooks/useResize";
 
 interface CoreModel {
   setParameterValueById(id: string, value: number): void;
@@ -12,10 +11,22 @@ export const useLive2DModel = (
   app: Application | null,
   isMounted: boolean,
   analyzer: AnalyserNode | null,
-  isPlaying: boolean
+  isPlaying: boolean,
+  modelPath: string
 ) => {
   const modelRef = useRef<Live2DModel | null>(null);
   const animationFrameRef = useRef<number | null>(null);
+
+  const onResize = useCallback(() => {
+    if (modelRef.current) {
+      modelRef.current.position.set(
+        window.innerWidth / 2,
+        window.innerHeight / 2 + 150
+      );
+    }
+  }, []);
+
+  useResize(onResize);
 
   // モデルのロードと初期設定
   useEffect(() => {
@@ -23,38 +34,28 @@ export const useLive2DModel = (
 
     const loadModel = async () => {
       try {
-        const model = await Live2DModel.from('/Resources/Hiyori/Hiyori.model3.json', {
+        const model = await Live2DModel.from(modelPath, {
           autoUpdate: true,
         });
         modelRef.current = model;
 
-        model.scale.set(0.2);
+        const scale =
+          Math.min(
+            window.innerWidth / model.width,
+            window.innerHeight / model.height
+          ) * 1.5;
+        model.scale.set(scale);
         model.anchor.set(0.5);
-        model.position.set(
-          window.innerWidth / 2,
-          window.innerHeight / 2
-        );
+        model.position.set(window.innerWidth / 2, window.innerHeight / 2 + 150);
 
-        const onResize = () => {
-          model.position.set(
-            window.innerWidth / 2,
-            window.innerHeight / 2
-          );
-        };
-
-        window.addEventListener('resize', onResize);
         app.stage.addChild(model as any);
-
-        return () => {
-          window.removeEventListener('resize', onResize);
-        };
       } catch (error) {
-        console.error('Live2Dモデルのロードに失敗:', error);
+        console.error("Live2Dモデルのロードに失敗:", error);
       }
     };
 
     loadModel();
-  }, [app, isMounted]);
+  }, [app, isMounted, modelPath]);
 
   // リップシンクの更新
   useEffect(() => {
@@ -70,15 +71,16 @@ export const useLive2DModel = (
       if (analyzer && modelRef.current) {
         const dataArray = new Uint8Array(analyzer.frequencyBinCount);
         analyzer.getByteFrequencyData(dataArray);
-        
+
         const average = dataArray.reduce((a, b) => a + b) / dataArray.length;
         const normalizedValue = Math.min(average / 128, 1);
-        
+
         try {
-          const coreModel = modelRef.current.internalModel.coreModel as unknown as CoreModel;
-          coreModel.setParameterValueById('ParamMouthOpenY', normalizedValue);
+          const coreModel = modelRef.current.internalModel
+            .coreModel as unknown as CoreModel;
+          coreModel.setParameterValueById("ParamMouthOpenY", normalizedValue);
         } catch (error) {
-          console.error('パラメータの設定に失敗:', error);
+          console.error("パラメータの設定に失敗:", error);
         }
       }
       animationFrameRef.current = requestAnimationFrame(updateLipSync);

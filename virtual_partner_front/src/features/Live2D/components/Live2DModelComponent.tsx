@@ -2,12 +2,23 @@ import React, { useRef, useEffect } from "react";
 import { usePIXIApp } from "../hooks/usePIXIApp";
 import { useLive2DModel } from "../hooks/useLive2DModel";
 import { useAudioAnalyzer } from "../../../hooks/useAudioAnalyzer";
+import { useAtom } from "jotai";
+import { backgroundImageAtom } from "../../../atoms/backgroundAtom";
 
-const Live2DModelComponent: React.FC<{ audioUrl: string }> = ({ audioUrl }) => {
+interface Live2DModelComponentProps {
+  modelPath: string;
+  audioUrl?: string;
+}
+
+export const Live2DModelComponent: React.FC<Live2DModelComponentProps> = ({
+  modelPath,
+  audioUrl,
+}) => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const isMountedRef = useRef(true);
   const { app, initialized } = usePIXIApp(canvasRef); // 初期化状態を取得
-  const { analyzer, playAudio, pauseAudio, isPlaying } = useAudioAnalyzer(audioUrl);
+  const { analyzer, isPlaying } = useAudioAnalyzer(audioUrl || "");
+  const [backgroundImage] = useAtom(backgroundImageAtom);
 
   // マウント状態の管理
   useEffect(() => {
@@ -17,29 +28,31 @@ const Live2DModelComponent: React.FC<{ audioUrl: string }> = ({ audioUrl }) => {
     };
   }, []);
 
-  // PIXIアプリケーションが初期化された後にモデルをロード
-  useLive2DModel(initialized ? app : null, isMountedRef.current, analyzer, isPlaying);
+  // モデルのクリーンアップと再ロードを行う
+  useEffect(() => {
+    if (app && initialized) {
+      // 既存のモデルをクリーンアップ
+      app.stage.removeChildren();
+    }
+  }, [modelPath, app, initialized]);
+
+  useLive2DModel(
+    initialized ? app : null,
+    isMountedRef.current,
+    analyzer,
+    isPlaying,
+    modelPath
+  );
 
   return (
-    <>
-      <canvas
-        ref={canvasRef}
-        style={{
-          position: "fixed",
-          top: 0,
-          left: 0,
-          width: "100%",
-          height: "100%",
-          zIndex: 1,
-          pointerEvents: "none",
-        }}
-      />
-      <div style={{ position: 'fixed', bottom: 20, left: 20, zIndex: 2 }}>
-        <button onClick={playAudio}>再生</button>
-        <button onClick={pauseAudio}>停止</button>
-      </div>
-    </>
+    <canvas
+      ref={canvasRef}
+      className="absolute top-0 left-0 w-full h-full bg-cover bg-center"
+      style={{
+        backgroundImage: `url(${backgroundImage})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+      }}
+    />
   );
 };
-
-export default Live2DModelComponent;
