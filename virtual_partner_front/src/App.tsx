@@ -3,12 +3,12 @@ import "./App.css";
 import { Home } from "./pages/Home";
 import { Memory } from "./pages/Memory";
 import { Profile } from "./pages/Profile";
-import { Extra } from "./pages/Extra";
 import { Development } from "./pages/Development";
 import { useEffect, useState } from "react";
 import { Loading } from "./components/Loading";
 import { Footer } from "./features/Nuvigation/Footer";
 import { CSSTransition, TransitionGroup } from "react-transition-group";
+import { Pomodoro } from "./pages/Pomodoro";
 
 const AppContent = () => {
   const location = useLocation();
@@ -20,7 +20,7 @@ const AppContent = () => {
           <Route path="/" element={<Home />} />
           <Route path="/memory" element={<Memory />} />
           <Route path="/profile" element={<Profile />} />
-          <Route path="/extra" element={<Extra />} />
+          <Route path="/pomodoro" element={<Pomodoro />} />
           <Route path="/development" element={<Development />} />
         </Routes>
       </CSSTransition>

@@ -11,7 +11,11 @@ export const FooterView = () => {
       <FooterLinkItem to="/memory" icon={MemoryIcon} label="思い出" />
       <FooterLinkItem to="/profile" icon={PersonIcon} label="プロフィール" />
       <FooterLinkItem to="/" icon={HomeIcon} label="ホーム" />
-      <FooterLinkItem to="/extra" icon={SportsEsportsIcon} label="エクストラ" />
+      <FooterLinkItem
+        to="/pomodoro"
+        icon={SportsEsportsIcon}
+        label="ポモドーロ"
+      />
       <FooterLinkItem to="/development" icon={BuildIcon} label="開発" />
     </div>
   );
