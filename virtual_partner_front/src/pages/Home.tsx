@@ -1,5 +1,6 @@
 import { TextField } from "../components/TextField"
-import Live2DModelComponent from "../features/Live2D/components/Live2DModelComponent"
+import { BackgroundSelector } from "../features/BackgroundSelector"
+import { Live2DModelComponent } from "../features/Live2D/components/Live2DModelComponent"
 import { mockComments } from "../features/NicoNico/const"
 import { NicoNicoView } from "../features/NicoNico/NicoNicoView"
 // import { NuvMenuView } from "../features/Nuvigation/NuvMenu/NuvMenuView"
@@ -15,6 +16,11 @@ export const Home = () => {
       {/* <div className="absolute top-0 left-0 m-4">
         <TalkBoxView />
       </div> */}
+
+      <div className="absolute bottom-44 left-1/2 transform -translate-x-1/2 mb-8 w-full max-w-md z-40">
+        <BackgroundSelector />
+      </div>
+
       <div className="absolute bottom-20 left-1/2 transform -translate-x-1/2 mb-8 w-full max-w-md z-40">
         <TextField placeholder="テキストを入力してください" />
       </div>
