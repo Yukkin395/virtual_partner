@@ -6,3 +6,4 @@ virtual_pertner_back/aivis/Models/
 *.aivmx
 *.model
 *.look
+*.DS_Store
