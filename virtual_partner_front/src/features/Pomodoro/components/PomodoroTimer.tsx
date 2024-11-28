@@ -16,6 +16,7 @@ const PomodoroTimer: React.FC = () => {
     setNewTask,
     addTask,
     toggleTask,
+    deleteTask,
   } = usePomodoroTimer();
 
   return (
@@ -80,7 +81,12 @@ const PomodoroTimer: React.FC = () => {
             pr-2"
         >
           {tasks.map((task) => (
-            <TaskItem key={task.id} task={task} toggleTask={toggleTask} />
+            <TaskItem
+              key={task.id}
+              task={task}
+              toggleTask={toggleTask}
+              deleteTask={deleteTask}
+            />
           ))}
         </ul>
       </div>

@@ -9,10 +9,11 @@ interface Task {
 interface TaskItemProps {
   task: Task;
   toggleTask: (id: number) => void;
+  deleteTask: (id: number) => void;
 }
 
 export const TaskItem: React.FC<TaskItemProps> = React.memo(
-  ({ task, toggleTask }) => (
+  ({ task, toggleTask, deleteTask }) => (
     <li
       onClick={() => toggleTask(task.id)}
       className={`
@@ -60,6 +61,25 @@ export const TaskItem: React.FC<TaskItemProps> = React.memo(
       >
         {task.text}
       </span>
+      <button
+        onClick={(e) => {
+          e.stopPropagation();
+          deleteTask(task.id);
+        }}
+        className="p-2 text-gray-400 hover:text-red-500 transition-colors"
+      >
+        <svg
+          className="w-4 h-4"
+          fill="none"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth="2"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
     </li>
   )
 );

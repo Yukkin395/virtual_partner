@@ -28,7 +28,8 @@ export const usePomodoroTimer = () => {
   });
 
   // タスク管理
-  const { tasks, newTask, setNewTask, addTask, toggleTask } = useTaskManager();
+  const { tasks, newTask, setNewTask, addTask, toggleTask, deleteTask } =
+    useTaskManager();
 
   // 進捗率をパーセンテージで計算
   const progress = useMemo(() => {
@@ -58,5 +59,6 @@ export const usePomodoroTimer = () => {
     setNewTask,
     addTask,
     toggleTask,
+    deleteTask,
   };
 };

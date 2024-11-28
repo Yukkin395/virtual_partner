@@ -1,4 +1,6 @@
-import { useState, useCallback } from "react";
+import { useAtom } from "jotai";
+import { useCallback } from "react";
+import { newTaskAtom, tasksAtom } from "../../../atoms/tasksAtom";
 
 export interface Task {
   id: number;
@@ -7,32 +9,44 @@ export interface Task {
 }
 
 export const useTaskManager = () => {
-  const [tasks, setTasks] = useState<Task[]>([]);
-  const [newTask, setNewTask] = useState<string>("");
+  const [tasks, setTasks] = useAtom(tasksAtom);
+  const [newTask, setNewTask] = useAtom(newTaskAtom);
 
   const addTask = useCallback(
     (e: React.FormEvent) => {
       e.preventDefault();
       // 空白で無いタスクのみを追加
       if (newTask.trim()) {
-        setTasks((prevTasks) => [
+        setTasks((prevTasks: Task[]) => [
           ...prevTasks,
           { id: Date.now(), text: newTask.trim(), completed: false },
         ]);
         setNewTask("");
       }
     },
-    [newTask]
+    [newTask, setTasks, setNewTask]
   );
 
   // 指定されたIDのタスクの完了状態を切り替える
-  const toggleTask = useCallback((id: number) => {
-    setTasks((prevTasks) =>
-      prevTasks.map((task) =>
-        task.id === id ? { ...task, completed: !task.completed } : task
-      )
-    );
-  }, []);
+  const toggleTask = useCallback(
+    (id: number) => {
+      setTasks((prevTasks: Task[]) =>
+        prevTasks.map((task: Task) =>
+          task.id === id ? { ...task, completed: !task.completed } : task
+        )
+      );
+    },
+    [setTasks]
+  );
+
+  const deleteTask = useCallback(
+    (id: number) => {
+      setTasks((prevTasks: Task[]) =>
+        prevTasks.filter((task: Task) => task.id !== id)
+      );
+    },
+    [setTasks]
+  );
 
   return {
     tasks,
@@ -40,5 +54,6 @@ export const useTaskManager = () => {
     setNewTask,
     addTask,
     toggleTask,
+    deleteTask,
   };
 };
