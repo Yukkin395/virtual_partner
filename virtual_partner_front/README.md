@@ -1,50 +1,49 @@
-# React + TypeScript + Vite
+# Virtual Partner Front
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Live2Dモデルとインタラクティブに対話できるWebアプリケーションのフロントエンド部分
 
-Currently, two official plugins are available:
+## 使用技術
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+### フロントエンド
+- React + TypeScript + Vite
+- TailwindCSS - スタイリング
+- Jotai - 状態管理
+- PixiJS - キャンバスレンダリング 
+- pixi-live2d-display - Live2Dモデルの表示
+- firebase authentication - ユーザー認証
+- firestore - DB
+- storybook - UI確認・検証
 
-## Expanding the ESLint configuration
+### 主な機能
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+#### 1. Live2D表示機能
+- Live2Dモデルの表示・アニメーション
+- リップシンク(音声に合わせた口の動き)
+- モデル切り替え機能
 
-- Configure the top-level `parserOptions` property like this:
+#### 2. ポモドーロタイマー機能
+- 作業時間(25分)・休憩時間(5分)の管理
+- タスク管理機能
+- プログレスバーによる進捗表示
+- ブラウザ通知機能
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+#### 3. ニコニコ風コメント機能
+- ランダムな位置と時間でコメント表示
+- アニメーション効果
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+#### 4. その他
+- 背景切り替え機能
+- レスポンシブデザイン
+- アクセシビリティ対応
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
+## セットアップ
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
-```
+```bash
+# パッケージのインストール
+npm install
+
+# 開発サーバーの起動
+npm run dev
+
+# ビルド
+npm run build
