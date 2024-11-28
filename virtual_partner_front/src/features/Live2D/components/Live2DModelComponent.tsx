@@ -2,13 +2,15 @@ import React, { useRef, useEffect } from "react";
 import { usePIXIApp } from "../hooks/usePIXIApp";
 import { useLive2DModel } from "../hooks/useLive2DModel";
 import { useAudioAnalyzer } from "../../../hooks/useAudioAnalyzer";
+import { useAtom } from "jotai";
+import { backgroundImageAtom } from "../../../atoms/backgroundAtom";
 
 interface Live2DModelComponentProps {
   modelPath: string;
   audioUrl?: string;
 }
 
-const Live2DModelComponent: React.FC<Live2DModelComponentProps> = ({
+export const Live2DModelComponent: React.FC<Live2DModelComponentProps> = ({
   modelPath,
   audioUrl,
 }) => {
@@ -16,6 +18,7 @@ const Live2DModelComponent: React.FC<Live2DModelComponentProps> = ({
   const isMountedRef = useRef(true);
   const { app, initialized } = usePIXIApp(canvasRef); // 初期化状態を取得
   const { analyzer, isPlaying } = useAudioAnalyzer(audioUrl || "");
+  const [backgroundImage] = useAtom(backgroundImageAtom);
 
   // マウント状態の管理
   useEffect(() => {
@@ -37,9 +40,12 @@ const Live2DModelComponent: React.FC<Live2DModelComponentProps> = ({
   return (
     <canvas
       ref={canvasRef}
-      className="absolute top-0 left-0 w-full h-full bg-cover bg-center bg-custom-image"
+      className="absolute top-0 left-0 w-full h-full bg-cover bg-center"
+      style={{
+        backgroundImage: `url(${backgroundImage})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+      }}
     />
   );
 };
-
-export default Live2DModelComponent;
