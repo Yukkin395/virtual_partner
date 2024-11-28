@@ -28,7 +28,14 @@ export const Live2DModelComponent: React.FC<Live2DModelComponentProps> = ({
     };
   }, []);
 
-  // PIXIアプリケーションが初期化された後にモデルをロード
+  // モデルのクリーンアップと再ロードを行う
+  useEffect(() => {
+    if (app && initialized) {
+      // 既存のモデルをクリーンアップ
+      app.stage.removeChildren();
+    }
+  }, [modelPath, app, initialized]);
+
   useLive2DModel(
     initialized ? app : null,
     isMountedRef.current,
