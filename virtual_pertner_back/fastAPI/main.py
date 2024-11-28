@@ -1,13 +1,13 @@
 import time
 from fastapi import FastAPI, File, UploadFile, HTTPException
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, StreamingResponse
 import whisper
 import asyncio
 import os
 import uuid
 import openai
 from fastapi.middleware.cors import CORSMiddleware
-from gtts import gTTS
+import httpx
 
 app = FastAPI()
 
@@ -26,7 +26,6 @@ app.add_middleware(
 
 # Whisperモデルのロード（アプリ起動時に一度だけロード）
 model = whisper.load_model("base")  # "tiny", "base", "small", "medium", "large" の中から選択
-
 
 # Whisperを使った音声のテキスト変換
 async def transcribe_audio(file: UploadFile) -> str:
@@ -50,7 +49,6 @@ async def transcribe_audio(file: UploadFile) -> str:
 
     return transcribed_text
 
-
 initial_prompt = """
 命令：
 ・あなたは私の彼女です。
@@ -63,8 +61,7 @@ initial_prompt = """
 ・出力に記号は使わない
 """
 
-
-# gptモデルにテキスト送信 & 返信受信
+# GPTモデルにテキスト送信 & 返信受信
 def get_llm_response(user_text: str) -> str:
     # OpenAIのAPIキーを設定（環境変数から取得）
     openai.api_key = os.getenv("OPENAI_API_KEY")
@@ -82,28 +79,62 @@ def get_llm_response(user_text: str) -> str:
     llm_response = response.choices[0].message['content']
     return llm_response
 
+# AivisSpeech APIのエンドポイント設定
+AIVIS_API_URL = "http://aivis:10101/audio_query"
+AIVIS_SYNTH_URL = "http://aivis:10101/synthesis"
 
-@app.post("/chat/")
-async def chat(file: UploadFile = File(...)):
-    start_time = time.perf_counter() #----------------デバッグ用 処理開始時刻を記録------------------#
+# AivisSpeechを呼び出して音声データを生成する関数
+async def text_to_speech_aivis(text: str, speaker_id: int = 1) -> str:
+    try:
+        # Step 1: Audio Queryの取得
+        async with httpx.AsyncClient() as client:
+            query_response = await client.post(
+                f"{AIVIS_API_URL}?text={text}&speaker={speaker_id}"
+            )
+            query_response.raise_for_status()
+            query_data = query_response.json()
 
+            # Step 2: 音声合成 (Synthesis)
+            synthesis_response = await client.post(
+                f"{AIVIS_SYNTH_URL}?speaker={speaker_id}",
+                json=query_data,
+                headers={"Content-Type": "application/json"}
+            )
+            synthesis_response.raise_for_status()
+
+            # 音声データを保存
+            output_path = f"/tmp/output_{uuid.uuid4().hex}.wav"
+            with open(output_path, "wb") as audio_file:
+                audio_file.write(synthesis_response.content)
+
+        return output_path
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to generate audio: {str(e)}")
+
+
+@app.post("/chat_with_voice/")
+async def chat_with_voice(file: UploadFile = File(...)):
     if not file.content_type.startswith("audio/"):
         raise HTTPException(status_code=400, detail="Invalid file type")
-
+    
     try:
-        # 音声をテキストに変換する関数を呼び出す
+        # 音声をテキストに変換
         transcribed_text = await transcribe_audio(file)
 
-        # LLMにテキストを送り、応答を取得する関数を非同期的に実行
+        # LLMにテキストを送り応答を取得（非同期実行）
         loop = asyncio.get_event_loop()
         llm_response = await loop.run_in_executor(None, get_llm_response, transcribed_text)
 
-        end_time = time.perf_counter()  #----------------デバッグ用 処理終了時刻を記録------------------#
-        processing_time = end_time - start_time #----------------デバッグ用 処理時間を計算------------------#
+        # 音声データを生成する
+        speaker = 1  # 適切な speaker_id に変更（例: 1）
+        audio_path = await text_to_speech_aivis(llm_response, speaker)
 
+        # 音声データをクライアントに送信するための準備
+        def iterfile():
+            with open(audio_path, mode="rb") as file_like:
+                yield from file_like
 
-        # クライアントに音声認識の結果とLLMの応答を返す
-        return JSONResponse(content={"text": transcribed_text, "response": llm_response, "time": processing_time})
+        return StreamingResponse(iterfile(), media_type="audio/wav")
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
