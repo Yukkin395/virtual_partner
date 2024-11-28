@@ -1,0 +1,86 @@
+{
+	"Version": 3,
+	"FileReferences": {
+		"Moc": "Zundamon.moc3",
+		"Textures": [
+			"Zundamon.4096/texture_00.png"
+		],
+		"Physics": "Zundamon.physics3.json",
+		"DisplayInfo": "Zundamon.cdi3.json",
+		"Expressions": [
+			{
+				"Name": "StarEye",
+				"File": "motions/StarEye.exp3.json"
+			},
+			{
+				"Name": "GameController",
+				"File": "motions/GameController.exp3.json"
+			},
+			{
+				"Name": "NoEyes",
+				"File": "motions/NoEyes.exp3.json"
+			},
+			{
+				"Name": "Hauu",
+				"File": "motions/Hauu.exp3.json"
+			},
+			{
+				"Name": "SmallEyes",
+				"File": "motions/SmallEyes.exp3.json"
+			},
+			{
+				"Name": "IndexFingerR",
+				"File": "motions/IndexFingerR.exp3.json"
+			},
+			{
+				"Name": "IndexFingerL",
+				"File": "motions/IndexFingerL.exp3.json"
+			},
+			{
+				"Name": "PaleFace",
+				"File": "motions/PaleFace.exp3.json"
+			},
+			{
+				"Name": "BrushFace",
+				"File": "motions/BrushFace.exp3.json"
+			},
+			{
+				"Name": "Sweat",
+				"File": "motions/Sweat.exp3.json"
+			},
+			{
+				"Name": "Tear1",
+				"File": "motions/Tear1.exp3.json"
+			},
+			{
+				"Name": "Tear2",
+				"File": "motions/Tear2.exp3.json"
+			},
+			{
+				"Name": "ChangeGamingCon",
+				"File": "motions/ChangeGamingCon.exp3.json"
+			},
+			{
+				"Name": "GuruguruEye",
+				"File": "motions/GuruguruEye.exp3.json"
+			},
+			{
+				"Name": "ShockEye",
+				"File": "motions/ShockEye.exp3.json"
+			}
+		]
+	},
+	"Groups": [
+		{
+			"Target": "Parameter",
+			"Name": "LipSync",
+			"Ids": []
+		},
+		{
+			"Target": "Parameter",
+			"Name": "EyeBlink",
+			"Ids": []
+		}
+	],
+	"HitAreas": []
+}

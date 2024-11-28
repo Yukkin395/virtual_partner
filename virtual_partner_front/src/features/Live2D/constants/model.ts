@@ -9,8 +9,14 @@ export const models: Live2DModel[] = [
   },
   {
     id: "mao",
-    name: "マオ",
+    name: "虹色まお",
     path: "/Resources/Mao/Mao.model3.json",
-    thumbnailPath: "/character/hiyori/p-hiyori.png",
+    thumbnailPath: "/character/mao/p-mao.png",
+  },
+  {
+    id: "zundamon",
+    name: "ずんだもん",
+    path: "/Resources/Zundamon/zundamon.model3.json",
+    thumbnailPath: "/character/zundamon/p-zundamon.png"
   },
 ];
