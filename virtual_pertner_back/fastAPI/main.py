@@ -124,9 +124,14 @@ async def text_to_speech_aivis(text: str, speaker_id: int = 1) -> str:
             with open(output_path, "wb") as audio_file:
                 audio_file.write(synthesis_response.content)
 
-        return output_path
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Failed to generate audio: {str(e)}")
+            # その他の例外をキャッチして詳細をログに記録
+            error_message = f"Error during text-to-speech synthesis: {e}"  # デバッグ用
+            print(error_message)  # デバッグ用
+            traceback.print_exc()  # スタックトレースを出力
+            if synthesis_response:
+                print(f"Synthesis Response Content: {synthesis_response.text}")  # デバッグ用
+            raise HTTPException(status_code=500, detail=error_message)
 
 
 @app.post("/chat_with_voice/")
