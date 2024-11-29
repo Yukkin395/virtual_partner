@@ -1,6 +1,6 @@
 import time
-from fastapi import FastAPI, File, UploadFile, HTTPException
-from fastapi.responses import JSONResponse, StreamingResponse
+from fastapi import FastAPI, File, UploadFile, HTTPException, BackgroundTasks
+from fastapi.responses import FileResponse, JSONResponse
 import whisper
 import asyncio
 import os
@@ -8,25 +8,25 @@ import uuid
 import openai
 from fastapi.middleware.cors import CORSMiddleware
 import httpx
-import traceback  # 追加
+import traceback
 
 app = FastAPI()
 
 origins = [
     "http://localhost:5173",
-    # TODO: ここに本番環境のオリジンを入れる
+    # TODO: 本番環境のオリジンをここに追加
 ]
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,
+    allow_origins=origins,  # 本番環境では特定のオリジンを指定
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
 # Whisperモデルのロード（アプリ起動時に一度だけロード）
-model = whisper.load_model("base")  # "tiny", "base", "small", "medium", "large" の中から選択
+model = whisper.load_model("base")  # "tiny", "base", "small", "medium", "large" から選択
 
 # Whisperを使った音声のテキスト変換
 async def transcribe_audio(file: UploadFile) -> str:
@@ -102,7 +102,7 @@ def replace_none_in_lengths(data):
         return data
 
 async def text_to_speech_aivis(text: str, speaker_id: int = 1) -> str:
-    synthesis_response = None  # 変数を初期化しておく
+    synthesis_response = None
     try:
         # Step 1: Audio Queryの取得
         async with httpx.AsyncClient() as client:
@@ -113,7 +113,7 @@ async def text_to_speech_aivis(text: str, speaker_id: int = 1) -> str:
             query_data = query_response.json()
 
             # Audio Queryのデバッグ用ログ
-            print(f"Audio Query Response: {query_data}")  # デバッグ用
+            print(f"Audio Query Response: {query_data}")
 
             # Noneの値をデフォルト値に置き換える
             replace_none_in_lengths(query_data)
@@ -123,39 +123,50 @@ async def text_to_speech_aivis(text: str, speaker_id: int = 1) -> str:
                 f"{AIVIS_SYNTH_URL}?speaker={speaker_id}",
                 json=query_data,
                 headers={"Content-Type": "application/json"},
-                timeout=60.0  # タイムアウトを60秒に設定
+                timeout=60.0  # タイムアウトを必要に応じて調整
             )
             synthesis_response.raise_for_status()
 
-            # 音声データを保存
-            output_path = f"/app/output_{uuid.uuid4().hex}.wav"
-            with open(output_path, "wb") as audio_file:
+            # 音声データを一時ファイルとして保存
+            audio_filename = f"output_{uuid.uuid4().hex}.wav"
+            audio_path = os.path.join("/app/audio_files", audio_filename)  # サブディレクトリに保存
+            os.makedirs(os.path.dirname(audio_path), exist_ok=True)  # ディレクトリがなければ作成
+
+            with open(audio_path, "wb") as audio_file:
                 audio_file.write(synthesis_response.content)
 
-        print(f"Audio Path: {output_path}")  # デバッグ用
-        return output_path
+        print(f"Audio Path: {audio_path}")  # デバッグ用
+        return audio_filename  # パスではなくファイル名を返す
 
     except httpx.HTTPStatusError as e:
-        # HTTPステータスエラーをキャッチして詳細をログに記録
-        error_message = f"HTTP error occurred: {e.response.status_code} - {e.response.text}"  # デバッグ用
-        print(error_message)  # デバッグ用
-        traceback.print_exc()  # スタックトレースを出力
+        error_message = f"HTTP error occurred: {e.response.status_code} - {e.response.text}"
+        print(error_message)
+        traceback.print_exc()
         raise HTTPException(status_code=500, detail=error_message)
 
     except Exception as e:
-        # その他の例外をキャッチして詳細をログに記録
-        error_message = f"Error during text-to-speech synthesis: {e}"  # デバッグ用
-        print(error_message)  # デバッグ用
-        traceback.print_exc()  # スタックトレースを出力
+        error_message = f"Error during text-to-speech synthesis: {e}"
+        print(error_message)
+        traceback.print_exc()
         if synthesis_response:
-            print(f"Synthesis Response Content: {synthesis_response.text}")  # デバッグ用
+            print(f"Synthesis Response Content: {synthesis_response.text}")
         raise HTTPException(status_code=500, detail=error_message)
 
+# 一時ファイルを一定時間後に削除する関数
+def delete_file(path: str):
+    try:
+        time.sleep(60)  # 60秒後に削除
+        if os.path.exists(path):
+            os.remove(path)
+            print(f"Deleted temporary file: {path}")
+    except Exception as e:
+        print(f"Error deleting file {path}: {e}")
+
 @app.post("/chat_with_voice/")
-async def chat_with_voice(file: UploadFile = File(...)):
+async def chat_with_voice(file: UploadFile = File(...), background_tasks: BackgroundTasks = None):
     if not file.content_type.startswith("audio/"):
         raise HTTPException(status_code=400, detail="Invalid file type")
-    
+
     try:
         # 音声をテキストに変換
         transcribed_text = await transcribe_audio(file)
@@ -164,22 +175,39 @@ async def chat_with_voice(file: UploadFile = File(...)):
         loop = asyncio.get_event_loop()
         llm_response = await loop.run_in_executor(None, get_llm_response, transcribed_text)
 
-        # 音声データを生成する
+        # 音声データを生成し、ファイル名を取得
         speaker = 888753760  # 正しいスピーカーIDに変更
-        audio_path = await text_to_speech_aivis(llm_response, speaker)
+        audio_filename = await text_to_speech_aivis(llm_response, speaker)
+        audio_url = f"/download/{audio_filename}"
 
-        # 音声データをクライアントに送信するための準備
-        def iterfile():
-            try:
-                with open(audio_path, mode="rb") as file_like:
-                    yield from file_like
-            except Exception as e:
-                print(f"Error during file streaming: {e}")  # デバッグ用
+        # 一時ファイルの削除をスケジュール
+        audio_path = os.path.join("/app/audio_files", audio_filename)
+        if background_tasks is not None:
+            background_tasks.add_task(delete_file, audio_path)
 
-        print(f"Returning audio file: {audio_path}")  # デバッグ用
-        return StreamingResponse(iterfile(), media_type="audio/wav")
+        # レスポンスを作成
+        response_data = {
+            "transcribed_text": transcribed_text,
+            "llm_response": llm_response,
+            "audio_url": audio_url
+        }
+
+        print(f"Returning JSON response with audio URL and text.")  # デバッグ用
+        return JSONResponse(content=response_data)
 
     except Exception as e:
-        print(f"Error occurred: {e}")  # デバッグ用
-        traceback.print_exc()  # スタックトレースを出力
+        print(f"Error occurred: {e}")
+        traceback.print_exc()
         raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/download/{audio_filename}")
+async def download_audio(audio_filename: str):
+    # ファイル名を検証してディレクトリトラバーサルを防止
+    if ".." in audio_filename or "/" in audio_filename or "\\" in audio_filename:
+        raise HTTPException(status_code=400, detail="Invalid filename")
+
+    audio_path = os.path.join("/app/audio_files", audio_filename)
+    if os.path.exists(audio_path):
+        return FileResponse(audio_path, media_type="audio/wav")
+    else:
+        raise HTTPException(status_code=404, detail="File not found")
