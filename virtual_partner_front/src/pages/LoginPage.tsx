@@ -1,4 +1,4 @@
-import LoginForm from "../features/Login/components/LoginForm";
+import LoginContainer from "../features/Login/components/LoginContainer";
 import { useLogin } from "../features/Login/hooks/useLogin";
 
 export const LoginPage = () => {
@@ -15,7 +15,7 @@ export const LoginPage = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <LoginForm
+      <LoginContainer
         email={email}
         password={password}
         setEmail={setEmail}

@@ -9,18 +9,14 @@ export const useLogin = () => {
   const [isRegistering, setIsRegistering] = useState(false);
   const navigate = useNavigate();
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent): Promise<void> => {
     e.preventDefault();
-    try {
-      if (isRegistering) {
-        await register(email, password);
-        navigate("/");
-      } else {
-        await login(email, password);
-        navigate("/");
-      }
-    } catch (error) {
-      console.error("エラー:", error);
+    if (isRegistering) {
+      await register(email, password);
+      navigate("/");
+    } else {
+      await login(email, password);
+      navigate("/");
     }
   };
 
