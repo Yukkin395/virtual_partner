@@ -1,5 +1,5 @@
 import { useAtom } from "jotai";
-import { auth, googleProvider } from "../utils/firebase";
+import { auth, db, googleProvider } from "../utils/firebase";
 import {
   onAuthStateChanged,
   signInWithEmailAndPassword,
@@ -7,6 +7,7 @@ import {
   signOut,
   createUserWithEmailAndPassword,
 } from "firebase/auth";
+import { doc, getDoc } from "firebase/firestore";
 import { userAtom } from "../atoms/userAtom";
 import { useEffect, useState } from "react";
 
@@ -51,5 +52,19 @@ export const useFirebase = () => {
     return signInWithPopup(auth, googleProvider);
   };
 
-  return { user, login, register, logout, loginWithGoogle, isLoading };
+  const checkUserProfile = async (uid: string) => {
+    const docRef = doc(db, "users", uid);
+    const docSnap = await getDoc(docRef);
+    return docSnap.exists();
+  };
+
+  return {
+    user,
+    login,
+    register,
+    logout,
+    loginWithGoogle,
+    isLoading,
+    checkUserProfile,
+  };
 };

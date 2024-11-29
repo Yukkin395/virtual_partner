@@ -18,14 +18,51 @@ import { LoginPage } from "./pages/LoginPage";
 import { useAtom } from "jotai";
 import { userAtom } from "./atoms/userAtom";
 import { useFirebase } from "./hooks/useFirebase";
+import { useEffect, useState } from "react";
+import { CreateProfile } from "./pages/CreateProfile";
 
 const AppContent = () => {
   const location = useLocation();
   const [user] = useAtom(userAtom);
-  const { isLoading } = useFirebase();
+  const { isLoading, checkUserProfile } = useFirebase();
+  const [hasProfile, setHasProfile] = useState<boolean | null>(null);
 
-  if (isLoading) {
+  useEffect(() => {
+    const checkProfile = async () => {
+      if (user) {
+        try {
+          const exists = await checkUserProfile(user.uid);
+          setHasProfile(exists);
+        } catch (error) {
+          console.error("プロフィールチェックエラー:", error);
+          setHasProfile(false);
+        }
+      } else {
+        setHasProfile(null);
+      }
+    };
+
+    // クエリパラメータでプロフィール作成完了を検知
+    if (location.search.includes("profile=created")) {
+      setHasProfile(true);
+    } else {
+      checkProfile();
+    }
+  }, [user, checkUserProfile, location.search]);
+
+  // プロフィール作成ページへのアクセス制御
+  if (user && hasProfile && location.pathname === "/create-profile") {
+    return <Navigate to="/" replace />;
+  }
+
+  // ログイン状態とプロフィールのチェック中
+  if (isLoading || (user && hasProfile === null)) {
     return <Loading />;
+  }
+
+  // プロフィール作成ページへのリダイレクト
+  if (user && hasProfile === false && location.pathname !== "/create-profile") {
+    return <Navigate to="/create-profile" replace />;
   }
 
   // ログインページでは Footer を表示しない
@@ -42,6 +79,7 @@ const AppContent = () => {
                 user ? <Home /> : <Navigate to="/login" replace={true} />
               }
             />
+            <Route path="/create-profile" element={<CreateProfile />} />
             <Route
               path="/memory"
               element={user ? <Memory /> : <Navigate to="/login" />}
