@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { useFirebase } from "../../../hooks/useFirebase";
 import { useNavigate } from "react-router-dom";
+import { doc, getDoc } from "firebase/firestore";
+import { db } from "../../../utils/firebase";
 
 export const useLogin = () => {
   const { login, loginWithGoogle, register, logout } = useFirebase();
@@ -9,18 +11,14 @@ export const useLogin = () => {
   const [isRegistering, setIsRegistering] = useState(false);
   const navigate = useNavigate();
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent): Promise<void> => {
     e.preventDefault();
-    try {
-      if (isRegistering) {
-        await register(email, password);
-        navigate("/");
-      } else {
-        await login(email, password);
-        navigate("/");
-      }
-    } catch (error) {
-      console.error("エラー:", error);
+    if (isRegistering) {
+      await register(email, password);
+      navigate("/");
+    } else {
+      await login(email, password);
+      navigate("/");
     }
   };
 
@@ -42,6 +40,12 @@ export const useLogin = () => {
     }
   };
 
+  const checkUserProfile = async (uid: string) => {
+    const docRef = doc(db, "users", uid);
+    const docSnap = await getDoc(docRef);
+    return docSnap.exists();
+  };
+
   return {
     email,
     setEmail,
@@ -52,5 +56,6 @@ export const useLogin = () => {
     isRegistering,
     setIsRegistering,
     logout: handleLogout,
+    checkUserProfile,
   };
 };
