@@ -16,6 +16,7 @@
     "@emotion/styled": "^11.13.5",
     "@mui/icons-material": "^6.1.8",
     "@mui/material": "^6.1.8",
+    "firebase": "^11.0.2",
     "install": "^0.13.0",
     "jotai": "^2.10.2",
     "npm": "^10.9.1",
