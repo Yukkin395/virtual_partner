@@ -8,7 +8,7 @@ import uuid
 import openai
 from fastapi.middleware.cors import CORSMiddleware
 import httpx
-import traceback
+import traceback  # 追加
 
 app = FastAPI()
 
@@ -44,6 +44,7 @@ async def transcribe_audio(file: UploadFile) -> str:
         loop = asyncio.get_event_loop()
         result = await loop.run_in_executor(None, model.transcribe, file_path)
         transcribed_text = result["text"]
+        print(f"Transcribed text: {transcribed_text}")  # デバッグ用
     finally:
         # 一時ファイルを削除
         os.remove(file_path)
@@ -78,12 +79,12 @@ def get_llm_response(user_text: str) -> str:
         ]
     )
     llm_response = response.choices[0].message['content']
+    print(f"LLM Response: {llm_response}")  # デバッグ用
     return llm_response
 
 # AivisSpeech APIのエンドポイント設定
 AIVIS_API_URL = "http://aivis:10101/audio_query"
 AIVIS_SYNTH_URL = "http://aivis:10101/synthesis"
-
 
 def replace_none_in_lengths(data):
     if isinstance(data, dict):
@@ -100,8 +101,8 @@ def replace_none_in_lengths(data):
     else:
         return data
 
-# AivisSpeechを呼び出して音声データを生成する関数
 async def text_to_speech_aivis(text: str, speaker_id: int = 1) -> str:
+    synthesis_response = None  # 変数を初期化しておく
     try:
         # Step 1: Audio Queryの取得
         async with httpx.AsyncClient() as client:
@@ -111,28 +112,44 @@ async def text_to_speech_aivis(text: str, speaker_id: int = 1) -> str:
             query_response.raise_for_status()
             query_data = query_response.json()
 
+            # Audio Queryのデバッグ用ログ
+            print(f"Audio Query Response: {query_data}")  # デバッグ用
+
+            # Noneの値をデフォルト値に置き換える
+            replace_none_in_lengths(query_data)
+
             # Step 2: 音声合成 (Synthesis)
             synthesis_response = await client.post(
                 f"{AIVIS_SYNTH_URL}?speaker={speaker_id}",
                 json=query_data,
-                headers={"Content-Type": "application/json"}
+                headers={"Content-Type": "application/json"},
+                timeout=60.0  # タイムアウトを60秒に設定
             )
             synthesis_response.raise_for_status()
 
             # 音声データを保存
-            output_path = f"/tmp/output_{uuid.uuid4().hex}.wav"
+            output_path = f"/app/output_{uuid.uuid4().hex}.wav"
             with open(output_path, "wb") as audio_file:
                 audio_file.write(synthesis_response.content)
 
-    except Exception as e:
-            # その他の例外をキャッチして詳細をログに記録
-            error_message = f"Error during text-to-speech synthesis: {e}"  # デバッグ用
-            print(error_message)  # デバッグ用
-            traceback.print_exc()  # スタックトレースを出力
-            if synthesis_response:
-                print(f"Synthesis Response Content: {synthesis_response.text}")  # デバッグ用
-            raise HTTPException(status_code=500, detail=error_message)
+        print(f"Audio Path: {output_path}")  # デバッグ用
+        return output_path
 
+    except httpx.HTTPStatusError as e:
+        # HTTPステータスエラーをキャッチして詳細をログに記録
+        error_message = f"HTTP error occurred: {e.response.status_code} - {e.response.text}"  # デバッグ用
+        print(error_message)  # デバッグ用
+        traceback.print_exc()  # スタックトレースを出力
+        raise HTTPException(status_code=500, detail=error_message)
+
+    except Exception as e:
+        # その他の例外をキャッチして詳細をログに記録
+        error_message = f"Error during text-to-speech synthesis: {e}"  # デバッグ用
+        print(error_message)  # デバッグ用
+        traceback.print_exc()  # スタックトレースを出力
+        if synthesis_response:
+            print(f"Synthesis Response Content: {synthesis_response.text}")  # デバッグ用
+        raise HTTPException(status_code=500, detail=error_message)
 
 @app.post("/chat_with_voice/")
 async def chat_with_voice(file: UploadFile = File(...)):
@@ -148,14 +165,18 @@ async def chat_with_voice(file: UploadFile = File(...)):
         llm_response = await loop.run_in_executor(None, get_llm_response, transcribed_text)
 
         # 音声データを生成する
-        speaker = 1  # 適切な speaker_id に変更（例: 1）
+        speaker = 888753760  # 正しいスピーカーIDに変更
         audio_path = await text_to_speech_aivis(llm_response, speaker)
 
         # 音声データをクライアントに送信するための準備
         def iterfile():
-            with open(audio_path, mode="rb") as file_like:
-                yield from file_like
+            try:
+                with open(audio_path, mode="rb") as file_like:
+                    yield from file_like
+            except Exception as e:
+                print(f"Error during file streaming: {e}")  # デバッグ用
 
+        print(f"Returning audio file: {audio_path}")  # デバッグ用
         return StreamingResponse(iterfile(), media_type="audio/wav")
 
     except Exception as e:
