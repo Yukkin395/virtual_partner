@@ -83,6 +83,22 @@ def get_llm_response(user_text: str) -> str:
 AIVIS_API_URL = "http://aivis:10101/audio_query"
 AIVIS_SYNTH_URL = "http://aivis:10101/synthesis"
 
+
+def replace_none_in_lengths(data):
+    if isinstance(data, dict):
+        for k, v in data.items():
+            if k in ['consonant_length', 'vowel_length', 'pitch'] and v is None:
+                data[k] = 0.0
+            elif isinstance(v, (dict, list)):
+                replace_none_in_lengths(v)
+        return data
+    elif isinstance(data, list):
+        for item in data:
+            replace_none_in_lengths(item)
+        return data
+    else:
+        return data
+
 # AivisSpeechを呼び出して音声データを生成する関数
 async def text_to_speech_aivis(text: str, speaker_id: int = 1) -> str:
     try:
