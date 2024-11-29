@@ -1,16 +1,31 @@
 version: '3.8'
+
 services:
-  app:
-    build: .
+  backend:
+    build:
+      context: ./fastAPI                # FastAPIのDockerfileがあるディレクトリ
+      dockerfile: Dockerfile             # Dockerfile名を指定
     ports:
-      - "8000:8000"
+      - "8000:8000"                      # ホストの8000ポートをコンテナの8000ポートにマッピング
     volumes:
-      - faster_whisper:/models
-    command: python -m uvicorn main:app --host 0.0.0.0 --port 8000
-    restart: unless-stopped
-    tty: true
+      - faster_whisper:/models           # FastAPI用のボリューム（必要に応じて調整）
+    command: uvicorn main:app --host 0.0.0.0 --port 8000  # FastAPIの起動コマンド
+    restart: unless-stopped             # コンテナが停止した場合、自動で再起動
     env_file:
-      - .env  # .envファイルを読み込む
+      - ./fastAPI/.env                   # FastAPI用の.envファイル
+    depends_on:
+      - aivis                            # backendはaivisサービスに依存
+
+  aivis:
+    image: ghcr.io/aivis-project/aivisspeech-engine:cpu-latest  # 公式Dockerイメージを使用
+    ports:
+      - "10101:10101"                      # ホストの10101ポートをコンテナの10101ポートにマッピング
+    volumes:
+      - ./aivis/Models:/home/user/.local/share/AivisSpeech-Engine-Dev  # ローカルのModelsディレクトリをコンテナ内にマウント
+    restart: unless-stopped               # コンテナが停止した場合、自動で再起動
+    environment:
+      - ENGINE_HOST=0.0.0.0
+      - ENGINE_PORT=10101
 
 volumes:
   faster_whisper:

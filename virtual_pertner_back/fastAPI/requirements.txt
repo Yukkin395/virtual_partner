@@ -5,3 +5,4 @@ gTTS==2.3.0
 pydantic==1.10.2
 python-multipart==0.0.17
 openai==0.27.8
+httpx

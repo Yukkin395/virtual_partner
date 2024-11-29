@@ -1,0 +1,9 @@
+# Modelsディレクトリ全体を無視
+virtual_pertner_back/aivis/Models/
+
+# 特定のファイルのみ無視（例: キャッシュや中間生成物）
+*.onnx
+*.aivmx
+*.Models
+*.look
+*.DS_Store
