@@ -8,6 +8,7 @@ import uuid
 import openai
 from fastapi.middleware.cors import CORSMiddleware
 import httpx
+import traceback
 
 app = FastAPI()
 
@@ -153,4 +154,6 @@ async def chat_with_voice(file: UploadFile = File(...)):
         return StreamingResponse(iterfile(), media_type="audio/wav")
 
     except Exception as e:
+        print(f"Error occurred: {e}")  # デバッグ用
+        traceback.print_exc()  # スタックトレースを出力
         raise HTTPException(status_code=500, detail=str(e))
