@@ -11,4 +11,5 @@ export type CharacterProfile = {
   description: string;
   imageUrl: string;
   bgColor: string;
+  id?: number;
 };

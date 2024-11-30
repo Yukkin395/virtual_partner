@@ -1,5 +1,8 @@
 /* 複数のキャラクターのプロフィールを管理する */
 import { CharacterProfile } from "../types/character";
+import hiyoriImg from "/character/hiyori/p-hiyori.png";
+import maoImg from "/character/mao/p-mao.png";
+import natoriImg from "/character/natori/p-natori.png";
 
 export const characterProfiles: CharacterProfile[] = [
   {
@@ -13,8 +16,9 @@ export const characterProfiles: CharacterProfile[] = [
     hobbies: "家庭菜園",
     height: "145cm",
     description: "癒し系妹キャラやってます!!",
-    imageUrl: "character/hiyori/p-hiyori.png",
+    imageUrl: hiyoriImg,
     bgColor: "bg-yellow-100",
+    id: 0,
   },
   {
     name: "虹色まお",
@@ -27,8 +31,9 @@ export const characterProfiles: CharacterProfile[] = [
     hobbies: "魔法を試すこと",
     height: "149cm",
     description: "おばあちゃんっ子でお絵描きが大好きな魔法使いのたまご",
-    imageUrl: "character/mao/p-mao.png",
+    imageUrl: maoImg,
     bgColor: "bg-orange-100",
+    id: 1,
   },
   {
     name: "名執 尽",
@@ -42,7 +47,8 @@ export const characterProfiles: CharacterProfile[] = [
     height: "不明",
     description:
       "ダークパープルの燕尾服風スーツを纏った、優雅で洗練された姿をしている",
-    imageUrl: "character/natori/p-natori.png",
+    imageUrl: natoriImg,
     bgColor: "bg-sky-300",
+    id: 2,
   },
 ];
