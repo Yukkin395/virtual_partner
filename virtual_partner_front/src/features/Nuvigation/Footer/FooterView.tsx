@@ -8,7 +8,7 @@ import { Timer } from "@mui/icons-material";
 export const FooterView = () => {
   return (
     <div className="flex justify-between items-center bg-white border-t border-gray-300 rounded-lg shadow-2xl overflow-hidden">
-      <FooterLinkItem to="/memory" icon={MemoryIcon} label="思い出" />
+      <FooterLinkItem to="/memories" icon={MemoryIcon} label="思い出" />
       <FooterLinkItem to="/profile" icon={PersonIcon} label="プロフィール" />
       <FooterLinkItem to="/" icon={HomeIcon} label="ホーム" />
       <FooterLinkItem to="/pomodoro" icon={Timer} label="ポモドーロ" />

@@ -1,13 +1,23 @@
-import { collection, addDoc, serverTimestamp } from "firebase/firestore";
+import {
+  collection,
+  addDoc,
+  serverTimestamp,
+  query,
+  where,
+  getDocs,
+  updateDoc,
+} from "firebase/firestore";
 import { db } from "../utils/firebase";
 
+interface SaveChatParams {
+  inputText: string;
+  llmResponse: string;
+  userId: string;
+  characterId: number;
+}
+
 interface ChatStorage {
-  saveChat: (params: {
-    inputText: string;
-    llmResponse: string;
-    userId: string;
-    characterId: number;
-  }) => Promise<void>;
+  saveChat: (params: SaveChatParams) => Promise<void>;
 }
 
 export const useChatStorage = (): ChatStorage => {
@@ -16,25 +26,40 @@ export const useChatStorage = (): ChatStorage => {
     llmResponse,
     userId,
     characterId,
-  }: {
-    inputText: string;
-    llmResponse: string;
-    userId: string;
-    characterId: number;
-  }) => {
+  }: SaveChatParams) => {
     try {
-      const chatRoomRef = collection(db, "chatRooms");
-      const messagesRef = collection(db, "messages");
+      // 既存のチャットルームを検索
+      const existingRoomQuery = query(
+        collection(db, "chatRooms"),
+        where("userId", "==", userId),
+        where("characterId", "==", characterId)
+      );
+      const existingRooms = await getDocs(existingRoomQuery);
 
-      const chatRoomDoc = await addDoc(chatRoomRef, {
-        userId,
-        characterId,
-        lastMessageAt: serverTimestamp(),
-        lastMessage: llmResponse,
-      });
+      let chatRoomId: string;
 
-      await addDoc(messagesRef, {
-        chatRoomId: chatRoomDoc.id,
+      if (existingRooms.empty) {
+        // 新規チャットルーム作成
+        const newRoomRef = await addDoc(collection(db, "chatRooms"), {
+          userId,
+          characterId,
+          lastMessageAt: serverTimestamp(),
+          lastMessage: llmResponse,
+        });
+        chatRoomId = newRoomRef.id;
+      } else {
+        // 既存のチャットルームを更新
+        const roomDoc = existingRooms.docs[0];
+        chatRoomId = roomDoc.id;
+        await updateDoc(roomDoc.ref, {
+          lastMessageAt: serverTimestamp(),
+          lastMessage: llmResponse,
+        });
+      }
+
+      // メッセージを保存
+      await addDoc(collection(db, "messages"), {
+        chatRoomId,
         userId,
         characterId,
         text: inputText,
@@ -43,6 +68,7 @@ export const useChatStorage = (): ChatStorage => {
       });
     } catch (error) {
       console.error("チャット保存エラー:", error);
+      throw error;
     }
   };
 
