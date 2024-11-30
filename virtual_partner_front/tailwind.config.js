@@ -57,6 +57,8 @@ export default {
         fade: "fade 1s ease-in-out",
         fadeIn: "fadeIn 0.5s ease-out",
         fadeOut: "fadeOut 0.5s ease-out",
+        bounce: "bounce 1s infinite",
+        pulse: "pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite",
       },
     },
   },
