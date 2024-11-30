@@ -1,4 +1,3 @@
-import { TextField } from "../components/TextField";
 import { BackgroundSelector } from "../features/BackgroundSelector";
 import { Live2DModelComponent } from "../features/Live2D/components/Live2DModelComponent";
 import { ModelSelector } from "../features/Live2D/components/ModelSelector";
@@ -8,6 +7,7 @@ import { NicoNicoView } from "../features/Niconico/NiconicoView";
 import { TalkBoxView } from "../features/TalkBox/TalkBoxView";
 import { useEffect, useState } from "react";
 import { generateComments } from "../features/Niconico/generateComment";
+import { TextField } from "../features/TextField";
 
 export const Home = () => {
   const [modelPath] = useAtom(live2dModelAtom);
