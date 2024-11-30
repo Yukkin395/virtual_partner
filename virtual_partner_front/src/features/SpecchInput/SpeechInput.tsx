@@ -50,7 +50,7 @@ const SpeechInput: React.FC<SpeechInputProps> = ({ onResult }) => {
             throw new Error("アップロードに失敗しました");
           }
           const data = await response.json();
-          onResult(data.transcribed_text, data.llm_response);
+          onResult(data.input_text, data.llm_response);
 
           const audioUrl = `http://localhost:8000${data.audio_url}`;
           const audio = new Audio(audioUrl);
