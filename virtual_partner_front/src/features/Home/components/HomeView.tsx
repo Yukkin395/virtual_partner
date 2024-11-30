@@ -1,7 +1,8 @@
 import { BackgroundSelector } from "../../BackgroundSelector";
 import { Live2DModelComponent } from "../../Live2D/components/Live2DModelComponent";
 import { ModelSelector } from "../../Live2D/components/ModelSelector";
-import { NicoNicoView } from "../../Niconico/NiconicoView";
+import { NicoNicoView } from "../../Niconico";
+
 import { TalkBoxView } from "../../TalkBox/TalkBoxView";
 import { TextField } from "../../TextField";
 

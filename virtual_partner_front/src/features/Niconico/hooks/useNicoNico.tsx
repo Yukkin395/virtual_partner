@@ -1,9 +1,5 @@
 import { useEffect, useState } from "react";
-
-type Comment = {
-  text: string;
-  top: number;
-};
+import { Comment } from "../types";
 
 export const useNicoNico = (commentsList: string[]) => {
   const [comments, setComments] = useState<Comment[]>([]);

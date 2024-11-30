@@ -1,10 +1,7 @@
-import { useNicoNico } from "./useNicoNico";
+import { useNicoNico } from "../hooks/useNicoNico";
+import type { NiconicoViewProps } from "../types";
 
-type NicoNicoViewProps = {
-  Comments: string[];
-};
-
-export const NicoNicoView = ({ Comments }: NicoNicoViewProps) => {
+export const NicoNicoView = ({ Comments }: NiconicoViewProps) => {
   const comments = useNicoNico(Comments);
 
   return (

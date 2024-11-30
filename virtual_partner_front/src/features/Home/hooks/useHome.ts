@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useAtom } from "jotai";
 import { characterIdAtom, live2dModelAtom } from "../../../atoms/modelAtom";
-import { generateComments } from "../../Niconico/generateComment";
+import { generateComments } from "../../Niconico";
 
 export const useHome = () => {
   const [modelPath] = useAtom(live2dModelAtom);
