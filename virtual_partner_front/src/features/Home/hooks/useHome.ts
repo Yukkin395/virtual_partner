@@ -13,6 +13,7 @@ export const useHome = () => {
   const [llmResponse, setLlmResponse] = useState<string | null>(null);
   const [comments, setComments] = useState<string[]>([]);
   const [isThinking, setIsThinking] = useState(false);
+  const [isSpeechProcessing, setIsSpeechProcessing] = useState(false); 
 
   const { saveChat } = useChatStorage();
 
@@ -20,11 +21,13 @@ export const useHome = () => {
     if (!llmResponse) {
       // 入力直後
       setIsThinking(true);
+      setIsSpeechProcessing(true);
       setInputText(inputText);
     } else {
       // レスポンス受信後
       setLlmResponse(llmResponse);
       setIsThinking(false);
+      setIsSpeechProcessing(false);
       if (user) {
         await saveChat({
           inputText,
@@ -54,5 +57,6 @@ export const useHome = () => {
     comments,
     handleResult,
     isThinking,
+    isSpeechProcessing
   };
 };

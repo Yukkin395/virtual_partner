@@ -14,6 +14,7 @@ export const useSpeechRecorder = (
       if (mediaRecorderRef.current) {
         mediaRecorderRef.current.stop();
         setRecording(false);
+        onResult("", "");
       }
     } else {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
