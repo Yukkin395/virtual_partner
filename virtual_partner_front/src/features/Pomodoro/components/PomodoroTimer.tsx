@@ -1,8 +1,11 @@
 import { TaskItem } from "./TaskItem";
 import { usePomodoroTimer } from "../hooks/usePomodoroTimer";
 import { TimerCircle } from "./TimerCicle";
+import { useRef } from "react";
 
 const PomodoroTimer: React.FC = () => {
+  const audioRef = useRef<HTMLAudioElement>(null);
+
   const {
     isWork,
     isActive,
@@ -19,8 +22,16 @@ const PomodoroTimer: React.FC = () => {
     deleteTask,
   } = usePomodoroTimer();
 
+  const handleStart = () => {
+    if (!isActive) {
+      audioRef.current?.play();
+    }
+    startTimer();
+  };
+
   return (
     <div className="flex flex-col items-center h-screen bg-slate-100 bg-opacity-50 shadow-xl justify-center p-4">
+      <audio ref={audioRef} src="/pomodo-hiyori.wav" />
       <div className="rounded-lg p-8 max-w-md w-full">
         <h1 className="text-3xl font-bold text-center mb-4">
           {isWork ? "作業時間" : "休憩時間"}
@@ -32,7 +43,7 @@ const PomodoroTimer: React.FC = () => {
 
         <div className="flex justify-center space-x-4 mb-6">
           <button
-            onClick={isActive ? pauseTimer : startTimer}
+            onClick={isActive ? pauseTimer : handleStart}
             className={`relative px-4 py-2 bg-transparent ${
               isWork
                 ? "text-black border-2 border-black"
