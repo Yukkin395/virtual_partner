@@ -22,14 +22,15 @@ export const Home = () => {
 
   useEffect(() => {
     const fetchComments = async () => {
-      if (inputText) {  // inputText が存在する場合のみ実行
+      if (inputText) {
+        // inputText が存在する場合のみ実行
         const generatedComments = await generateComments(inputText);
         setComments(generatedComments);
       }
     };
 
     fetchComments();
-  }, [inputText]);  // inputText を依存配列に追加
+  }, [inputText]); // inputText を依存配列に追加
 
   return (
     <div className="relative min-h-screen">
