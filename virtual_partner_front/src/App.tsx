@@ -7,20 +7,20 @@ import {
 } from "react-router-dom";
 import "regenerator-runtime";
 import "./App.css";
-import { Home } from "./pages/Home";
-import { Memory } from "./pages/Memory";
-import { Profile } from "./pages/Profile";
-import { Development } from "./pages/Development";
 import { Loading } from "./components/Loading";
 import { Footer } from "./features/Nuvigation/Footer";
 import { CSSTransition, TransitionGroup } from "react-transition-group";
-import { Pomodoro } from "./pages/Pomodoro";
 import { LoginPage } from "./pages/LoginPage";
 import { useAtom } from "jotai";
 import { userAtom } from "./atoms/userAtom";
 import { useFirebase } from "./hooks/useFirebase";
 import { useEffect, useState } from "react";
-import { CreateProfile } from "./pages/CreateProfile";
+import { HomePage } from "./pages/HomePage";
+import { CreateProfilePage } from "./pages/CreateProfilePage";
+import { MemoryPage } from "./pages/MemoryPage";
+import { ProfilePage } from "./pages/ProfilePage";
+import { PomodoroPage } from "./pages/PomodoroPage";
+import { DevelopmentPage } from "./pages/DevelopmentPage";
 
 const AppContent = () => {
   const location = useLocation();
@@ -77,25 +77,25 @@ const AppContent = () => {
             <Route
               path="/"
               element={
-                user ? <Home /> : <Navigate to="/login" replace={true} />
+                user ? <HomePage /> : <Navigate to="/login" replace={true} />
               }
             />
-            <Route path="/create-profile" element={<CreateProfile />} />
+            <Route path="/create-profile" element={<CreateProfilePage />} />
             <Route
               path="/memory"
-              element={user ? <Memory /> : <Navigate to="/login" />}
+              element={user ? <MemoryPage /> : <Navigate to="/login" />}
             />
             <Route
               path="/profile"
-              element={user ? <Profile /> : <Navigate to="/login" />}
+              element={user ? <ProfilePage /> : <Navigate to="/login" />}
             />
             <Route
               path="/pomodoro"
-              element={user ? <Pomodoro /> : <Navigate to="/login" />}
+              element={user ? <PomodoroPage /> : <Navigate to="/login" />}
             />
             <Route
               path="/development"
-              element={user ? <Development /> : <Navigate to="/login" />}
+              element={user ? <DevelopmentPage /> : <Navigate to="/login" />}
             />
             <Route path="/login" element={<LoginPage />} />
           </Routes>

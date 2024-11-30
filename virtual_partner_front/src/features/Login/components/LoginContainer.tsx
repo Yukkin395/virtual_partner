@@ -1,6 +1,7 @@
 import React, { useState } from "react";
-import LoginForm from "./LoginForm";
+
 import { useFormValidation } from "../hooks/useFormValidataion";
+import { LoginView } from "./LoginView";
 
 interface LoginContainerProps {
   email: string;
@@ -13,7 +14,7 @@ interface LoginContainerProps {
   setIsRegistering: (isRegistering: boolean) => void;
 }
 
-const LoginContainer: React.FC<LoginContainerProps> = ({
+export const LoginContainer: React.FC<LoginContainerProps> = ({
   email,
   password,
   setEmail,
@@ -51,7 +52,7 @@ const LoginContainer: React.FC<LoginContainerProps> = ({
   };
 
   return (
-    <LoginForm
+    <LoginView
       email={email}
       password={password}
       setEmail={setEmail}
@@ -65,5 +66,3 @@ const LoginContainer: React.FC<LoginContainerProps> = ({
     />
   );
 };
-
-export default LoginContainer;
