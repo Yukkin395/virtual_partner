@@ -49,7 +49,7 @@ export const MemoryContainer = () => {
         const q = query(
           messagesRef,
           where("chatRoomId", "==", roomId),
-          orderBy("createdAt", "asc"),
+          orderBy("createdAt", "desc"),
           limit(30)
         );
 
