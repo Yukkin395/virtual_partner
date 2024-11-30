@@ -1,5 +1,5 @@
 import time
-from fastapi import FastAPI, File, UploadFile, HTTPException, BackgroundTasks
+from fastapi import FastAPI, File, UploadFile, HTTPException, BackgroundTasks, Form
 from fastapi.responses import FileResponse, JSONResponse
 import whisper
 import asyncio
@@ -163,13 +163,24 @@ def delete_file(path: str):
         print(f"Error deleting file {path}: {e}")
 
 @app.post("/chat_with_voice/")
-async def chat_with_voice(file: UploadFile = File(...), background_tasks: BackgroundTasks = None):
-    if not file.content_type.startswith("audio/"):
-        raise HTTPException(status_code=400, detail="Invalid file type")
+async def chat_with_voice(
+    file: UploadFile = File(None), 
+    text: str = Form(None), 
+    background_tasks: BackgroundTasks = None
+):
+    if not file and not text:
+        raise HTTPException(status_code=400, detail="Either 'file' or 'text' must be provided.")
+    if file and text:
+        raise HTTPException(status_code=400, detail="Provide either 'file' or 'text', not both.")
 
     try:
-        # 音声をテキストに変換
-        transcribed_text = await transcribe_audio(file)
+        if file:
+            if not file.content_type.startswith("audio/"):
+                raise HTTPException(status_code=400, detail="Invalid file type")
+            # 音声をテキストに変換
+            transcribed_text = await transcribe_audio(file)
+        else:
+            transcribed_text = text
 
         # LLMにテキストを送り応答を取得（非同期実行）
         loop = asyncio.get_event_loop()
@@ -187,7 +198,7 @@ async def chat_with_voice(file: UploadFile = File(...), background_tasks: Backgr
 
         # レスポンスを作成
         response_data = {
-            "transcribed_text": transcribed_text,
+            "input_text": transcribed_text,
             "llm_response": llm_response,
             "audio_url": audio_url
         }
