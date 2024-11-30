@@ -26,7 +26,7 @@ app.add_middleware(
 )
 
 # Whisperモデルのロード（アプリ起動時に一度だけロード）
-model = whisper.load_model("base")  # "tiny", "base", "small", "medium", "large" から選択
+model = whisper.load_model("tiny")  # "tiny", "base", "small", "medium", "large" から選択
 
 # Whisperを使った音声のテキスト変換
 async def transcribe_audio(file: UploadFile) -> str:
