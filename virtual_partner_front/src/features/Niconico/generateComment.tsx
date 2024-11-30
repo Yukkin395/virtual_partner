@@ -53,7 +53,7 @@ export const generateComments = async (
       .replace(/^\[|\]$/g, "")
       .split(",")
       .map((comment) => comment.trim().replace(/^"|"$/g, ""))
-      .filter(comment => comment.length > 0);
+      .filter((comment) => comment.length > 0);
     return comments;
   }
 };

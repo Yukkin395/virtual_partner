@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import SpeechInput from "../../features/SpecchInput/SpeechInput";
+import { SpeechInput } from "../../features/SpecchInput";
 
 type TextFieldViewProps = {
   label?: string;

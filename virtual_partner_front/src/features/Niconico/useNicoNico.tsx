@@ -19,26 +19,26 @@ export const useNicoNico = (commentsList: string[]) => {
     return position;
   };
 
-  // ランダムなコメントを取得
+  // 利用可能なコメントリストからランダムに1～3件選び、Comment 型のデータに加工。
   const getRandomComments = (availableComments: string[]): Comment[] => {
     if (availableComments.length === 0) return [];
-    
+
     const count = Math.min(
       Math.floor(Math.random() * 3) + 1,
       availableComments.length
     );
-    
+
     const newComments: Comment[] = Array.from({ length: count }).map(() => {
       const randomIndex = Math.floor(Math.random() * availableComments.length);
       const selectedComment = availableComments[randomIndex];
       availableComments.splice(randomIndex, 1);
-  
+
       return {
         text: selectedComment,
         top: getRandomPosition(),
       };
     });
-  
+
     return newComments;
   };
 
