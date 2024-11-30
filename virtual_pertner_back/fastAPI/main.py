@@ -182,7 +182,7 @@ async def chat_with_voice(
         llm_response = await loop.run_in_executor(None, get_llm_response, transcribed_text, chara_id)
 
         # 音声データを生成し、ファイル名を取得
-        speaker_id_mapping = {0: 888753763, 1: 888753762, 2: 888753765}  # スピーカーIDを設定
+        speaker_id_mapping = {0: 888753763, 1: 888753762, 2: 606865152}  # スピーカーIDを設定
         speaker = speaker_id_mapping.get(chara_id, 888753760) # デフォルトは 888753760
         audio_filename = await text_to_speech_aivis(llm_response, speaker)
         audio_url = f"/download/{audio_filename}"
