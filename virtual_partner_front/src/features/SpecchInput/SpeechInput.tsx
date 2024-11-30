@@ -4,9 +4,10 @@ import MicIcon from "@mui/icons-material/Mic";
 
 type SpeechInputProps = {
   onResult: (transcribedText: string, llmResponse: string) => void;
+  currentCharaId: number;
 };
 
-const SpeechInput: React.FC<SpeechInputProps> = ({ onResult }) => {
+const SpeechInput: React.FC<SpeechInputProps> = ({ onResult, currentCharaId }) => {
   const [recording, setRecording] = useState(false);
   const [audioURL, setAudioURL] = useState<string | null>(null);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
@@ -37,6 +38,7 @@ const SpeechInput: React.FC<SpeechInputProps> = ({ onResult }) => {
         // サーバーに音声ファイルを送信
         const formData = new FormData();
         formData.append("file", audioBlob, "recording.wav");
+        formData.append("chara_id", currentCharaId.toString());
 
         try {
           const response = await fetch(

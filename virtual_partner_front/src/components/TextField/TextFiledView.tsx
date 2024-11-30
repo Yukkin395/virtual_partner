@@ -4,12 +4,14 @@ type TextFieldViewProps = {
   label?: string;
   placeholder: string;
   onResult: (transcribedText: string, llmResponse: string) => void;
+  currentCharaId: number;
 };
 
 export const TextFieldView = ({
   label,
   placeholder,
   onResult,
+  currentCharaId,
 }: TextFieldViewProps) => {
   return (
     <div className="flex flex-col w-full max-w-md gap-2">
@@ -24,7 +26,7 @@ export const TextFieldView = ({
                   placeholder:text-gray-400"
         />
         <div className="absolute translate-x-[380px] bottom-1">
-          <SpeechInput onResult={onResult} />
+          <SpeechInput onResult={onResult} currentCharaId={currentCharaId} />
         </div>
       </div>
     </div>
