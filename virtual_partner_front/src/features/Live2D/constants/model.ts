@@ -17,6 +17,6 @@ export const models: Live2DModel[] = [
     id: "natori",
     name: "名執尽",
     path: "/Resources/Natori/Natori.model3.json",
-    thumbnailPath: "/character/natori/p-natori.png"
+    thumbnailPath: "/character/natori/p-natori.png",
   },
 ];
