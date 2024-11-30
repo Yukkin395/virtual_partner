@@ -2,7 +2,7 @@ import { HomeView } from "./HomeView";
 import { useHome } from "../hooks/useHome";
 
 export const HomeContainer = () => {
-  const { modelPath, charaId, llmResponse, comments, handleResult } = useHome();
+  const { modelPath, charaId, llmResponse, comments, handleResult, isThinking } = useHome();
 
   return (
     <HomeView
@@ -11,6 +11,7 @@ export const HomeContainer = () => {
       llmResponse={llmResponse}
       comments={comments}
       onResult={handleResult}
+      isThinking={isThinking}
     />
   );
 };

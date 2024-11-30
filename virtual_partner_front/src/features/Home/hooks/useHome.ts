@@ -12,19 +12,27 @@ export const useHome = () => {
   const [inputText, setInputText] = useState<string | null>(null);
   const [llmResponse, setLlmResponse] = useState<string | null>(null);
   const [comments, setComments] = useState<string[]>([]);
+  const [isThinking, setIsThinking] = useState(false);
 
   const { saveChat } = useChatStorage();
 
   const handleResult = async (inputText: string, llmResponse: string) => {
-    setInputText(inputText);
-    setLlmResponse(llmResponse);
-    if (user) {
-      await saveChat({
-        inputText,
-        llmResponse,
-        userId: user.uid,
-        characterId: charaId,
-      });
+    if (!llmResponse) {
+      // 入力直後
+      setIsThinking(true);
+      setInputText(inputText);
+    } else {
+      // レスポンス受信後
+      setLlmResponse(llmResponse);
+      setIsThinking(false);
+      if (user) {
+        await saveChat({
+          inputText,
+          llmResponse,
+          userId: user.uid,
+          characterId: charaId,
+        });
+      }
     }
   };
 
@@ -45,5 +53,6 @@ export const useHome = () => {
     llmResponse,
     comments,
     handleResult,
+    isThinking,
   };
 };
