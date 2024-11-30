@@ -1,5 +1,5 @@
-import { CreateProfileContainer } from "../features/CreateProfile/components/CreateProfileContainer";
+import { CreateProfile } from "../features/CreateProfile";
 
 export const CreateProfilePage = () => {
-  return <CreateProfileContainer />;
+  return <CreateProfile />;
 };
