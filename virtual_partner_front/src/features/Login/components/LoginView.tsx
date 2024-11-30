@@ -1,7 +1,7 @@
 import React from "react";
 import { Google } from "@mui/icons-material";
 
-interface LoginFormProps {
+interface LoginViewProps {
   email: string;
   password: string;
   setEmail: (email: string) => void;
@@ -14,7 +14,7 @@ interface LoginFormProps {
   isLoading?: boolean;
 }
 
-const LoginForm: React.FC<LoginFormProps> = ({
+export const LoginView: React.FC<LoginViewProps> = ({
   email,
   password,
   setEmail,
@@ -135,5 +135,3 @@ const LoginForm: React.FC<LoginFormProps> = ({
     </div>
   );
 };
-
-export default LoginForm;
