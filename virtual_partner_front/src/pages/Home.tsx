@@ -5,20 +5,29 @@ import { ModelSelector } from "../features/Live2D/components/ModelSelector";
 import { useAtom } from "jotai";
 import { live2dModelAtom } from "../atoms/modelAtom";
 import { NicoNicoView } from "../features/Niconico/NiconicoView";
-import { mockComments } from "../features/Niconico/const";
 import { TalkBoxView } from "../features/TalkBox/TalkBoxView";
-import { useState } from "react";
-import SpeechInput from "../features/SpecchInput/SpeechInput";
+import { useEffect, useState } from "react";
+import { generateComments } from "../features/Niconico/generateComment";
 
 export const Home = () => {
   const [modelPath] = useAtom(live2dModelAtom);
   const [transcribedText, setTranscribedText] = useState<string | null>(null);
   const [llmResponse, setLlmResponse] = useState<string | null>(null);
+  const [comments, setComments] = useState<string[]>([]);
 
   const handleResult = (transcribedText: string, llmResponse: string) => {
     setTranscribedText(transcribedText);
     setLlmResponse(llmResponse);
   };
+
+  useEffect(() => {
+    const fetchComments = async () => {
+      const generatedComments = await generateComments();
+      setComments(generatedComments);
+    };
+
+    fetchComments();
+  }, []);
 
   return (
     <div className="relative min-h-screen">
@@ -37,7 +46,7 @@ export const Home = () => {
         />
       </div>
       <div className="absolute inset-0">
-        <NicoNicoView Comments={mockComments} />
+        <NicoNicoView Comments={comments} />
       </div>
     </div>
   );
