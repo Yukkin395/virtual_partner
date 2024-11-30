@@ -1,13 +1,20 @@
+import SpeechInput from "../../features/SpecchInput/SpeechInput";
+
 type TextFieldViewProps = {
   label?: string;
   placeholder: string;
+  onResult: (transcribedText: string, llmResponse: string) => void;
 };
 
-export const TextFieldView = ({ label, placeholder }: TextFieldViewProps) => {
+export const TextFieldView = ({
+  label,
+  placeholder,
+  onResult,
+}: TextFieldViewProps) => {
   return (
     <div className="flex flex-col w-full max-w-md gap-2">
       <label className="text-md font-medium px-1">{label}</label>
-      <div className="relative">
+      <div className="relative flex items-center">
         <input
           type="text"
           placeholder={placeholder}
@@ -16,6 +23,9 @@ export const TextFieldView = ({ label, placeholder }: TextFieldViewProps) => {
                     focus:border-transparent transition-all duration-200 ease-in-out
                   placeholder:text-gray-400"
         />
+        <div className="absolute translate-x-[380px] bottom-1">
+          <SpeechInput onResult={onResult} />
+        </div>
       </div>
     </div>
   );

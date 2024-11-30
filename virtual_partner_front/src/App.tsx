@@ -5,6 +5,7 @@ import {
   useLocation,
   Navigate,
 } from "react-router-dom";
+import "regenerator-runtime";
 import "./App.css";
 import { Home } from "./pages/Home";
 import { Memory } from "./pages/Memory";

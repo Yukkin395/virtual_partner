@@ -21,19 +21,24 @@ export const useNicoNico = (commentsList: string[]) => {
 
   // ランダムなコメントを取得
   const getRandomComments = (availableComments: string[]): Comment[] => {
-    const newComments: Comment[] = Array.from({
-      length: Math.floor(Math.random() * 3) + 1, // 1から3個のコメントをランダムに生成
-    }).map(() => {
+    if (availableComments.length === 0) return [];
+    
+    const count = Math.min(
+      Math.floor(Math.random() * 3) + 1,
+      availableComments.length
+    );
+    
+    const newComments: Comment[] = Array.from({ length: count }).map(() => {
       const randomIndex = Math.floor(Math.random() * availableComments.length);
       const selectedComment = availableComments[randomIndex];
-      availableComments.splice(randomIndex, 1); // 選択されたコメントをリストから削除
-
+      availableComments.splice(randomIndex, 1);
+  
       return {
         text: selectedComment,
-        top: getRandomPosition(), // ランダムな位置を計算
+        top: getRandomPosition(),
       };
     });
-
+  
     return newComments;
   };
 

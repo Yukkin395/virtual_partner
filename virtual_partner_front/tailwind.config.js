@@ -38,6 +38,14 @@ export default {
           "0%": { opacity: 0 },
           "100%": { opacity: 1 },
         },
+        fadeIn: {
+          "0%": { opacity: 0, transform: "translateY(10px)" },
+          "100%": { opacity: 1, transform: "translateY(0)" },
+        },
+        fadeOut: {
+          "0%": { opacity: 1, transform: "translateY(0)" },
+          "100%": { opacity: 0, transform: "translateY(10px)" },
+        },
       },
       animation: {
         "niconico-scroll": "niconico-scroll 5s linear forwards",
@@ -47,6 +55,8 @@ export default {
         "opacity-1": "opacity-1 0.4s ease 0.4s forwards",
         spin: "spin 1s linear infinite",
         fade: "fade 1s ease-in-out",
+        fadeIn: "fadeIn 0.5s ease-out",
+        fadeOut: "fadeOut 0.5s ease-out",
       },
     },
   },
