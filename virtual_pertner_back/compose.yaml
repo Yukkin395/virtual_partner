@@ -21,7 +21,7 @@ services:
     ports:
       - "10101:10101"                      # ホストの10101ポートをコンテナの10101ポートにマッピング
     volumes:
-      - ./aivis/Models:/home/user/.local/share/AivisSpeech-Engine-Dev  # ローカルのModelsディレクトリをコンテナ内にマウント
+      - ~/.local/share/AivisSpeech-Engine:/home/user/.local/share/AivisSpeech-Engine-Dev
     restart: unless-stopped               # コンテナが停止した場合、自動で再起動
     environment:
       - ENGINE_HOST=0.0.0.0
