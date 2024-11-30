@@ -1,0 +1,1 @@
+export { Live2DContainer as Live2D } from "./components/Live2DContainer";
