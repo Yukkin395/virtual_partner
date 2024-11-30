@@ -5,7 +5,7 @@ import {
   ProfileCardViewProps,
 } from "../features/ProfileCard/ProfileCardView";
 
-export const Profile = () => {
+export const ProfilePage = () => {
   const [selectedCharacter, setSelectedCharacter] =
     useState<ProfileCardViewProps | null>(null);
 

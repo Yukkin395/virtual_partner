@@ -2,7 +2,7 @@ import { useAtom } from "jotai";
 import { userAtom } from "../atoms/userAtom";
 import { useLogin } from "../features/Login/hooks/useLogin";
 
-export const Development = () => {
+export const DevelopmentPage = () => {
   const [user] = useAtom(userAtom);
   const { logout } = useLogin();
 

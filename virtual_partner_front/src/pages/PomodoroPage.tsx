@@ -4,7 +4,7 @@ import { Live2DModelComponent } from "../features/Live2D/components/Live2DModelC
 import PomodoroTimer from "../features/Pomodoro/components/PomodoroTimer"
 import { live2dModelAtom } from "../atoms/modelAtom";
 
-export const Pomodoro = () => {
+export const PomodoroPage = () => {
   const [modelPath] = useAtom(live2dModelAtom);
 
   return (
