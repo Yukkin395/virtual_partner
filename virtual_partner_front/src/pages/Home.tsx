@@ -7,8 +7,6 @@ import { live2dModelAtom } from "../atoms/modelAtom";
 import { NicoNicoView } from "../features/Niconico/NiconicoView";
 import { mockComments } from "../features/Niconico/const";
 import { TalkBoxView } from "../features/TalkBox/TalkBoxView";
-// import { NuvMenuView } from "../features/Nuvigation/NuvMenu/NuvMenuView"
-// import { TalkBoxView } from "../features/TalkBox/TalkBoxView"
 
 export const Home = () => {
   const [modelPath] = useAtom(live2dModelAtom);
