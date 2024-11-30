@@ -2,11 +2,13 @@ import React, { useState, useRef } from "react";
 import { Button } from "@mui/material";
 import MicIcon from "@mui/icons-material/Mic";
 
-const SpeechInput: React.FC = () => {
+type SpeechInputProps = {
+  onResult: (transcribedText: string, llmResponse: string) => void;
+};
+
+const SpeechInput: React.FC<SpeechInputProps> = ({ onResult }) => {
   const [recording, setRecording] = useState(false);
   const [audioURL, setAudioURL] = useState<string | null>(null);
-  const [transcribedText, setTranscribedText] = useState<string | null>(null);
-  const [llmResponse, setLlmResponse] = useState<string | null>(null);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioChunksRef = useRef<Blob[]>([]);
 
@@ -48,8 +50,7 @@ const SpeechInput: React.FC = () => {
             throw new Error("アップロードに失敗しました");
           }
           const data = await response.json();
-          setTranscribedText(data.transcribed_text);
-          setLlmResponse(data.llm_response);
+          onResult(data.transcribed_text, data.llm_response);
 
           const audioUrl = `http://localhost:8000${data.audio_url}`;
           const audio = new Audio(audioUrl);
@@ -72,8 +73,6 @@ const SpeechInput: React.FC = () => {
       >
         <MicIcon style={{ color: recording ? "red" : "inherit" }} />{" "}
       </Button>
-      {transcribedText && <p>Transcribed Text: {transcribedText}</p>}
-      {llmResponse && <p>LLM Response: {llmResponse}</p>}
     </div>
   );
 };
