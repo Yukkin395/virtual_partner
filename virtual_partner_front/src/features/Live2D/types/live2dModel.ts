@@ -1,5 +1,5 @@
 export interface Live2DModel {
-  id: string;
+  id: number;
   name: string;
   path: string;
   thumbnailPath: string;
