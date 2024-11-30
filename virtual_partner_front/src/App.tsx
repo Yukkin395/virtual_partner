@@ -17,10 +17,12 @@ import { useFirebase } from "./hooks/useFirebase";
 import { useEffect, useState } from "react";
 import { HomePage } from "./pages/HomePage";
 import { CreateProfilePage } from "./pages/CreateProfilePage";
-import { MemoryPage } from "./pages/MemoryPage";
+
 import { ProfilePage } from "./pages/ProfilePage";
 import { PomodoroPage } from "./pages/PomodoroPage";
 import { DevelopmentPage } from "./pages/DevelopmentPage";
+import { MemoryPage } from "./pages/MemoryPage";
+import { ChatRoomListPage } from "./pages/ChatRoomListPage";
 
 const AppContent = () => {
   const location = useLocation();
@@ -81,8 +83,16 @@ const AppContent = () => {
               }
             />
             <Route path="/create-profile" element={<CreateProfilePage />} />
-            <Route
+            {/* <Route
               path="/memory"
+              element={user ? <MemoryPage /> : <Navigate to="/login" />}
+            /> */}
+            <Route
+              path="/memories"
+              element={user ? <ChatRoomListPage /> : <Navigate to="/login" />}
+            />
+            <Route
+              path="/memory/:roomId"
               element={user ? <MemoryPage /> : <Navigate to="/login" />}
             />
             <Route
