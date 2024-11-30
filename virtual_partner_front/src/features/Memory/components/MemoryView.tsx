@@ -2,10 +2,10 @@ import { useRef } from "react";
 import { CSSTransition } from "react-transition-group";
 import { IconButton, Avatar } from "@mui/material";
 import { ArrowBack } from "@mui/icons-material";
-import { MessageList } from "./MessageList";
 import type { Message } from "../types/message";
 import type { User } from "firebase/auth";
 import type { CharacterProfile } from "../../../types/character";
+import { MessageContainer } from "./MessageContainer";
 
 type MemoryViewProps = {
   messages: Message[];
@@ -64,7 +64,7 @@ export const MemoryView = ({
               <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900"></div>
             </div>
           ) : (
-            <MessageList
+            <MessageContainer
               messages={messages}
               character={character}
               user={user}
