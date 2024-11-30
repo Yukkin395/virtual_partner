@@ -4,17 +4,17 @@ import type { User } from "firebase/auth";
 import type { CharacterProfile } from "../../../types/character";
 import { MessageView } from "./MessageView";
 
-type MessageListContainerProps = {
+type MessageContainerProps = {
   messages: Message[];
   character: CharacterProfile;
   user: User | null;
 };
 
-export const MessageListContainer = ({
+export const MessageContainer = ({
   messages,
   character,
   user,
-}: MessageListContainerProps) => {
+}: MessageContainerProps) => {
   const groupedMessages = useMemo(() => {
     return messages.reduce((groups: { [key: string]: Message[] }, message) => {
       const date = message.createdAt.toLocaleDateString();
