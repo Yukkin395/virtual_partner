@@ -37,7 +37,7 @@ export const Home = () => {
       <Live2DModelComponent modelPath={modelPath} />
       <div className="absolute bottom-96 left-1/2 transform -translate-x-[60%] w-full max-w-md z-40 flex items-center space-x-12 animate-fadeIn">
         {llmResponse && <TalkBoxView message={llmResponse || ""} />}
-        {inputText && <TalkBoxView message={inputText || ""} />}
+        {/* {inputText && <TalkBoxView message={inputText || ""} />} */}
       </div>
       <div className="absolute bottom-40 left-1/2 transform -translate-x-1/2 w-full max-w-md z-40 flex items-center space-x-12">
         <BackgroundSelector />
@@ -48,7 +48,7 @@ export const Home = () => {
           placeholder="テキストを入力してください"
           onResult={handleResult}
         />
-        {inputText && <p className="text-white text-center">{comments}</p>}
+        {/* {inputText && <p className="text-white text-center">{comments}</p>} */}
       </div>
       <div className="absolute inset-0">
         <NicoNicoView Comments={comments} />
