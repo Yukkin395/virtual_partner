@@ -1,6 +1,7 @@
 /* 複数のキャラクターのプロフィールを管理する */
+import { CharacterProfile } from "../types/character";
 
-export const characterProfiles = [
+export const characterProfiles: CharacterProfile[] = [
   {
     name: "桃瀬ひより",
     age: "14",
@@ -32,8 +33,8 @@ export const characterProfiles = [
   {
     name: "名執 尽",
     age: "不明",
-    FirstPerson: "私",
-    Bloodtype: "不明",
+    firstPerson: "私",
+    bloodType: "不明",
     birthDate: "不名",
     favoriteFood: "不明",
     club: "なし",

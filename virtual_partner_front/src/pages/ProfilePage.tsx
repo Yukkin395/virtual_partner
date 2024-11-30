@@ -1,13 +1,11 @@
 import { useState } from "react";
 import { characterProfiles } from "../utils/characterProfile";
-import {
-  ProfileCardView,
-  ProfileCardViewProps,
-} from "../features/ProfileCard/ProfileCardView";
+import { ProfileCardView } from "../features/ProfileCard/ProfileCardView";
+import { CharacterProfile } from "../types/character";
 
 export const ProfilePage = () => {
   const [selectedCharacter, setSelectedCharacter] =
-    useState<ProfileCardViewProps | null>(null);
+    useState<CharacterProfile | null>(null);
 
   return (
     <div className="container mx-auto p-4">
