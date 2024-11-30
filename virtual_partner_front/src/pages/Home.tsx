@@ -3,7 +3,7 @@ import { BackgroundSelector } from "../features/BackgroundSelector";
 import { Live2DModelComponent } from "../features/Live2D/components/Live2DModelComponent";
 import { ModelSelector } from "../features/Live2D/components/ModelSelector";
 import { useAtom } from "jotai";
-import { live2dModelAtom } from "../atoms/modelAtom";
+import { characterIdAtom, live2dModelAtom } from "../atoms/modelAtom";
 import { NicoNicoView } from "../features/Niconico/NiconicoView";
 import { TalkBoxView } from "../features/TalkBox/TalkBoxView";
 import { useEffect, useState } from "react";
@@ -11,6 +11,7 @@ import { generateComments } from "../features/Niconico/generateComment";
 
 export const Home = () => {
   const [modelPath] = useAtom(live2dModelAtom);
+  const [charaId] = useAtom(characterIdAtom);
   const [inputText, setInputText] = useState<string | null>(null);
   const [llmResponse, setLlmResponse] = useState<string | null>(null);
   const [comments, setComments] = useState<string[]>([]);
@@ -47,6 +48,7 @@ export const Home = () => {
         <TextField
           placeholder="テキストを入力してください"
           onResult={handleResult}
+          currentCharaId={charaId}
         />
         {/* {inputText && <p className="text-white text-center">{comments}</p>} */}
       </div>
