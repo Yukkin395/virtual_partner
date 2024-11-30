@@ -10,9 +10,15 @@ export const useTextField = (
     e.preventDefault();
     if (!inputValue.trim()) return;
 
+    const submittedText = inputValue;
+    setInputValue("");
+
+    // 送信直前にコールバック実行
+    onResult(submittedText, ""); // 空のレスポンスを送信
+
     try {
       const formData = new FormData();
-      formData.append("text", inputValue);
+      formData.append("text", submittedText);
       formData.append("chara_id", currentCharaId.toString());
 
       const response = await fetch("http://localhost:8000/chat_with_voice/", {
@@ -23,13 +29,7 @@ export const useTextField = (
       if (!response.ok) throw new Error("Chat failed");
 
       const data = await response.json();
-      onResult(data.input_text, data.llm_response);
-
-      const audioUrl = `http://localhost:8000${data.audio_url}`;
-      const audio = new Audio(audioUrl);
-      audio.play();
-
-      setInputValue("");
+      onResult(data.input_text, data.llm_response); // レスポンス受信後に再度コールバック
     } catch (error) {
       console.error("Error:", error);
     }
