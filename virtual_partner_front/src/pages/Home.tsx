@@ -11,29 +11,32 @@ import { generateComments } from "../features/Niconico/generateComment";
 
 export const Home = () => {
   const [modelPath] = useAtom(live2dModelAtom);
-  const [transcribedText, setTranscribedText] = useState<string | null>(null);
+  const [inputText, setInputText] = useState<string | null>(null);
   const [llmResponse, setLlmResponse] = useState<string | null>(null);
   const [comments, setComments] = useState<string[]>([]);
 
-  const handleResult = (transcribedText: string, llmResponse: string) => {
-    setTranscribedText(transcribedText);
+  const handleResult = (inputText: string, llmResponse: string) => {
+    setInputText(inputText);
     setLlmResponse(llmResponse);
   };
 
   useEffect(() => {
     const fetchComments = async () => {
-      const generatedComments = await generateComments();
-      setComments(generatedComments);
+      if (inputText) {  // inputText が存在する場合のみ実行
+        const generatedComments = await generateComments(inputText);
+        setComments(generatedComments);
+      }
     };
 
     fetchComments();
-  }, []);
+  }, [inputText]);  // inputText を依存配列に追加
 
   return (
     <div className="relative min-h-screen">
       <Live2DModelComponent modelPath={modelPath} />
       <div className="absolute bottom-96 left-1/2 transform -translate-x-[60%] w-full max-w-md z-40 flex items-center space-x-12 animate-fadeIn">
         {llmResponse && <TalkBoxView message={llmResponse || ""} />}
+        {inputText && <TalkBoxView message={inputText || ""} />}
       </div>
       <div className="absolute bottom-40 left-1/2 transform -translate-x-1/2 w-full max-w-md z-40 flex items-center space-x-12">
         <BackgroundSelector />
@@ -44,6 +47,7 @@ export const Home = () => {
           placeholder="テキストを入力してください"
           onResult={handleResult}
         />
+        {inputText && <p className="text-white text-center">{comments}</p>}
       </div>
       <div className="absolute inset-0">
         <NicoNicoView Comments={comments} />

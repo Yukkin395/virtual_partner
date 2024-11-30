@@ -6,7 +6,7 @@ const openai = new OpenAI({
 });
 
 export const generateComments = async (
-  transcribedText: string
+  inputText: string
 ): Promise<string[]> => {
   const response = await openai.chat.completions.create({
     model: "gpt-4o-mini",
@@ -26,7 +26,7 @@ export const generateComments = async (
         **出力形式**: 以下のようなJSON形式で出力してください（出力以外の説明は不要です）
 
         {
-          "comments": [
+          [
             "コメント1",
             "コメント2",
             "コメント3"
@@ -34,19 +34,26 @@ export const generateComments = async (
         }
 
         ユーザーのテキストが以下の場合：
-        「${transcribedText}」
+        「${inputText}」
         `,
       },
     ],
-    max_tokens: 300,
+    max_tokens: 500,
   });
 
   const content = response.choices[0].message?.content || "";
-  const comments =
-    content
+  try {
+    // JSONとして解析を試みる
+    const jsonContent = JSON.parse(content);
+    return Array.isArray(jsonContent) ? jsonContent : [];
+  } catch (e) {
+    // JSON解析に失敗した場合は従来の方法でパース
+    const comments = content
       .trim()
-      .replace(/^\[|\]$/g, "") // 先頭と末尾の角括弧を削除
+      .replace(/^\[|\]$/g, "")
       .split(",")
-      .map((comment) => comment.trim().replace(/^"|"$/g, "")) || [];
-  return comments;
+      .map((comment) => comment.trim().replace(/^"|"$/g, ""))
+      .filter(comment => comment.length > 0);
+    return comments;
+  }
 };

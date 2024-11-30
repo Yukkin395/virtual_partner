@@ -24,7 +24,7 @@ export const useNicoNico = (commentsList: string[]) => {
     const newComments: Comment[] = Array.from({
       length: Math.floor(Math.random() * 3) + 1, // 1から3個のコメントをランダムに生成
     }).map(() => {
-      const randomIndex = Math.floor(Math.random() * availableComments.length);
+      const randomIndex = Math.floor(Math.random()* 1000 + 500);
       const selectedComment = availableComments[randomIndex];
       availableComments.splice(randomIndex, 1); // 選択されたコメントをリストから削除
 
