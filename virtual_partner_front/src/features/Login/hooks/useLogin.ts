@@ -3,6 +3,8 @@ import { useFirebase } from "../../../hooks/useFirebase";
 import { useNavigate } from "react-router-dom";
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "../../../utils/firebase";
+import { useAtom } from "jotai";
+import { userAtom } from "../../../atoms/userAtom";
 
 export const useLogin = () => {
   const { login, loginWithGoogle, register, logout } = useFirebase();
@@ -10,6 +12,7 @@ export const useLogin = () => {
   const [password, setPassword] = useState("");
   const [isRegistering, setIsRegistering] = useState(false);
   const navigate = useNavigate();
+  const [, setUser] = useAtom(userAtom);
 
   const handleSubmit = async (e: React.FormEvent): Promise<void> => {
     e.preventDefault();
@@ -20,6 +23,10 @@ export const useLogin = () => {
       await login(email, password);
       navigate("/");
     }
+  };
+
+  const updateUser = (updates: { displayName?: string; photoURL?: string }) => {
+    setUser((prev) => (prev ? { ...prev, ...updates } : null));
   };
 
   const handleGoogleLogin = async () => {
@@ -57,5 +64,6 @@ export const useLogin = () => {
     setIsRegistering,
     logout: handleLogout,
     checkUserProfile,
+    updateUser,
   };
 };

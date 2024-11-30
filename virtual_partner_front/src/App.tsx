@@ -20,7 +20,7 @@ import { CreateProfilePage } from "./pages/CreateProfilePage";
 
 import { ProfilePage } from "./pages/ProfilePage";
 import { PomodoroPage } from "./pages/PomodoroPage";
-import { DevelopmentPage } from "./pages/DevelopmentPage";
+import { AccountPage } from "./pages/AccountPage";
 import { MemoryPage } from "./pages/MemoryPage";
 import { ChatRoomListPage } from "./pages/ChatRoomListPage";
 
@@ -104,8 +104,8 @@ const AppContent = () => {
               element={user ? <PomodoroPage /> : <Navigate to="/login" />}
             />
             <Route
-              path="/development"
-              element={user ? <DevelopmentPage /> : <Navigate to="/login" />}
+              path="/account"
+              element={user ? <AccountPage /> : <Navigate to="/login" />}
             />
             <Route path="/login" element={<LoginPage />} />
           </Routes>
