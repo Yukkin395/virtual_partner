@@ -2,5 +2,5 @@
 
 このプロジェクトは、フロントエンドとバックエンドに分かれています。それぞれのディレクトリに詳細なREADMEが含まれていますので、以下をご参照ください。
 
-- [フロントエンド](./vartual_partner_front/README.md)
-- [バックエンド](./vartual_partner_back/README.md)
+- [フロントエンド](https://github.com/Yukkin395/virtual_partner/tree/main/virtual_partner_front#readme)
+- [バックエンド](https://github.com/Yukkin395/virtual_partner/tree/main/virtual_pertner_back#readme)
