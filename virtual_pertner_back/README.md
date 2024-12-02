@@ -102,7 +102,3 @@ http://localhost:8000/docs
    - 例: `http://localhost:8000/download/output_abcdef123456.wav`
 2. **ブラウザで直接アクセスして音声ファイルをダウンロード**
 
-#
-
-
-
