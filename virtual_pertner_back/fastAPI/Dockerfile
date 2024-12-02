@@ -1,3 +1,5 @@
+# FastAPI/Dockerfile
+
 # ベースイメージの指定
 FROM python:3.10-slim-bullseye
 
@@ -23,10 +25,10 @@ COPY requirements.txt /app/
 RUN pip install --no-cache-dir -r requirements.txt
 
 # アプリケーションのコードをコピー
-COPY . /app
+COPY app /app/app
 
 # ポートを公開
 EXPOSE 8000
 
 # FastAPIサーバーを起動
-CMD ["python", "-m", "uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
