@@ -6,8 +6,9 @@ import httpx
 from fastapi import HTTPException
 import traceback
 from app.config import AIVIS_API_URL, AIVIS_SYNTH_URL
-from app.utils.helpers import replace_none_in_lengths
+from app.utils.helpers import replace_none_in_lengths,timeit
 
+@timeit
 async def text_to_speech_aivis(text: str, speaker_id: int = 1) -> str:
     """
     テキストを音声に変換し、生成された音声ファイル名を返す関数。

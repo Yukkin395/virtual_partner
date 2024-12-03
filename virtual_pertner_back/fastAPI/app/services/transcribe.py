@@ -1,5 +1,6 @@
 # FastAPI/app/services/transcribe.py
 
+from app.utils.helpers import timeit
 import os
 import uuid
 import whisper
@@ -10,6 +11,7 @@ import traceback
 # Whisperモデルのロード（"tiny", "base", "small", "medium", "large" から選択）
 model = whisper.load_model("tiny")
 
+@timeit
 async def transcribe_audio(file: UploadFile) -> str:
     """
     アップロードされた音声ファイルをテキストに変換する関数。

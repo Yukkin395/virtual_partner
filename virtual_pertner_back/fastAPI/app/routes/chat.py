@@ -9,6 +9,7 @@ from app.services.transcribe import transcribe_audio
 from app.services.llm import get_llm_response
 from app.services.tts import text_to_speech_aivis
 from app.config import SPEAKER_ID_MAPPING
+from app.utils.helpers import timeit
 import traceback
 
 router = APIRouter()
@@ -25,6 +26,7 @@ def delete_file(path: str):
     except Exception as e:
         print(f"Error deleting file {path}: {e}")
 
+@timeit
 @router.post("/chat_with_voice/")
 async def chat_with_voice(
     file: UploadFile = File(None), 

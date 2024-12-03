@@ -1,11 +1,13 @@
 # FastAPI/app/services/llm.py
 
+from app.utils.helpers import timeit
 import openai
 import os
 from fastapi import HTTPException
 import traceback
 from app.config import OPENAI_API_KEY, INITIAL_PROMPTS
 
+@timeit
 def get_llm_response(user_text: str, chara_id: int) -> str:
     """
     ユーザーのテキストに基づいてLLM（GPTモデル）からの応答を取得する関数。
